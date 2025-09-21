@@ -1,0 +1,123 @@
+{
+  "success": true,
+  "json_data": {
+    "image_description": "A Costco Wholesale receipt showing a purchase made by Margarita M on July 28, 2021, at 6:23 PM. The receipt details the items purchased, their prices, the total amount, tax, and payment method.",
+    "text": {
+      "store_information": {
+        "company_name": "COSTCO WHOLESALE",
+        "address": {
+          "store_number": "Fontana #627",
+          "street_address": "16505 Sierra Lakes Parkway",
+          "city": "Fontana",
+          "state": "CA",
+          "zip_code": "92336",
+          "phone": "(909) 770-5639"
+        }
+      },
+      "member_information": "To Member 111913632629",
+      "items_purchased": [
+        {
+          "item": "FIRESTON ALE",
+          "quantity": 1,
+          "price": 25.99
+        },
+        {
+          "item": "CA REDEMP VA",
+          "quantity": 1,
+          "price": 1.2
+        },
+        {
+          "item": "DINNER PLATE",
+          "quantity": 1,
+          "price": 14.89
+        },
+        {
+          "item": "RUFFLES 28OZ",
+          "quantity": 1,
+          "price": 5.49
+        },
+        {
+          "item": "TRITAN BEV",
+          "quantity": 1,
+          "price": 9.97
+        },
+        {
+          "item": "KS RED COPS",
+          "quantity": 1,
+          "price": 9.49
+        },
+        {
+          "item": "RAZER BUNDLE",
+          "quantity": 1,
+          "price": 169.99
+        },
+        {
+          "item": "CUTLRY",
+          "quantity": 1,
+          "price": 8.79
+        },
+        {
+          "item": "KS FRN ODKA",
+          "quantity": 1,
+          "price": 18.99
+        }
+      ],
+      "totals": {
+        "subtotal": 259.4,
+        "tax": 19.68,
+        "total": 279.08
+      },
+      "payment_information": {
+        "aid": "A0000000980840",
+        "seq": 10943,
+        "app": 765953,
+        "tran_id": "120900010943",
+        "merchant_id": 990627
+      },
+      "transaction_details": {
+        "date": "07/28/2021",
+        "time": "18:23",
+        "store_number": 627,
+        "terminal_number": 10,
+        "transaction_number": 374,
+        "operator_number": 213,
+        "customer_name": "Margarita M",
+        "total_items_sold": 8,
+        "instant_savings": 5.4
+      }
+    },
+    "objects": [
+      "Costco receipt",
+      "barcode"
+    ],
+    "people": [
+      "Margarita M"
+    ],
+    "colors": [
+      "white",
+      "black"
+    ],
+    "shapes": [
+      "rectangular"
+    ],
+    "visual_elements": [
+      "text",
+      "barcode",
+      "numbers"
+    ],
+    "other_details": {
+      "payment_type": "EFT/Debit",
+      "change": 0.0
+    }
+  },
+  "metadata": {
+    "image_path": "CostcoBill.jpeg",
+    "image_size": [
+      473,
+      1024
+    ],
+    "model": "gemini-1.5-flash",
+    "tokens_used": 218,
+    "raw_response": "```json\n{\n  \"image_description\": \"A Costco Wholesale receipt showing a purchase made by Margarita M on July 28, 2021, at 6:23 PM. The receipt details the items purchased, their prices, the total amount, tax, and payment method.\",\n  \"text\": {\n    \"store_information\": \"COSTCO WHOLESALE\\nFontana #627\\n16505 Sierra Lakes Parkway\\nFontana, CA 92336\\n(909) 770-5639\",\n    \"member_information\": \"To Member 111913632629\",\n    \"items_purchased\": [\n      {\n        \"item\": \"FIRESTON ALE\",\n        \"quantity\": 1,\n        \"price\": 25.99\n      },\n      {\n        \"item\": \"CA REDEMP VA\",\n        \"quantity\": 1,\n        \"price\": 1.20\n      },\n      {\n        \"item\": \"DINNER PLATE\",\n        \"quantity\": 1,\n        \"price\": 14.89\n      },\n      {\n        \"item\": \"RUFFLES 28OZ\",\n        \"quantity\": 1,\n        \"price\": 5.49\n      },\n      {\n        \"item\": \"TRITAN BEV\",\n        \"quantity\": 1,\n        \"price\": 9.97\n      },\n      {\n        \"item\": \"KS RED COPS\",\n        \"quantity\": 1,\n        \"price\": 9.49\n      },\n      {\n        \"item\": \"RAZER BUNDLE\",\n        \"quantity\": 1,\n        \"price\": 169.99\n      },\n      {\n        \"item\": \"CUTLRY\",\n        \"quantity\": 1,\n        \"price\": 8.79\n      },\n      {\n        \"item\": \"KS FRN ODKA\",\n        \"quantity\": 1,\n        \"price\": 18.99\n      }\n    ],\n    \"totals\": {\n      \"subtotal\": 259.40,\n      \"tax\": 19.68,\n      \"total\": 279.08\n    },\n    \"payment_information\": {\n      \"aid\": \"A0000000980840\",\n      \"seq\": 10943,\n      \"app\": 765953,\n      \"tran_id\": \"120900010943\",\n      \"merchant_id\": 990627\n    },\n    \"transaction_details\": {\n      \"date\": \"07/28/2021\",\n      \"time\": \"18:23\",\n      \"store_number\": 627,\n      \"terminal_number\": 10,\n      \"transaction_number\": 374,\n      \"operator_number\": 213,\n      \"customer_name\": \"Margarita M\",\n      \"total_items_sold\": 8,\n      \"instant_savings\": 5.40\n    }\n  },\n  \"objects\": [\n    \"Costco receipt\",\n    \"barcode\"\n  ],\n  \"people\": [\n    \"Margarita M\"\n  ],\n  \"colors\": [\n    \"white\",\n    \"black\"\n  ],\n  \"shapes\": [\n    \"rectangular\"\n  ],\n  \"visual_elements\": [\n    \"text\",\n    \"barcode\",\n    \"numbers\"\n  ],\n  \"other_details\": {\n    \"payment_type\": \"EFT/Debit\",\n    \"change\": 0.00\n  }\n}\n```"
+  }
+}
