@@ -1,21 +1,18 @@
-research_task:
+image_to_json_task:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
+    Convert the image data to json {image}
+    Make sure you have the date from the uploaded image {bill_date}.
   expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    A json file from the bill in the {image}
+  agent: image_to_json_convertor
 
-reporting_task:
+inventory_managing_task:
   description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Take the context you got and update the inventory as a json file.
+    Make sure the inventory has the date you found from the context.
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
-  agent: reporting_analyst
-
+    A json file with the inventory
+  agent: inventory_manager
 image_processing_task:
   description: >
     Process the provided image and convert it to structured JSON format. 
@@ -27,3 +24,17 @@ image_processing_task:
     including text content, visual elements, objects, and metadata. The JSON
     should be properly formatted and ready for further processing or analysis.
   agent: image_processor
+
+snapshot_managering_task:
+  description: >
+    Take the inventory json file and predict the current availability based on the usage pattern and write it in a json file
+  expected_output: >
+    A json file with the current snapshop
+  agent: snapshot_manager
+
+shopping_recommendation_task:
+  description: >
+    When propted by the user, use the json file with the current snapshop to determine the shopping recommendation on the day
+  expected_output: >
+    A json file with the shopping recommendation
+  agent: shopping_recommender
