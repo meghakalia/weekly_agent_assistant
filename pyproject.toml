@@ -1,0 +1,23 @@
+[project]
+name = "smart_shop"
+version = "0.1.0"
+description = "smart-shop using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[tools]>=0.193.2,<1.0.0"
+]
+
+[project.scripts]
+smart_shop = "smart_shop.main:run"
+run_crew = "smart_shop.main:run"
+train = "smart_shop.main:train"
+replay = "smart_shop.main:replay"
+test = "smart_shop.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
