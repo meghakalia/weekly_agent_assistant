@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 .env
 __pycache__/
 .DS_Store
+=======
+/env_grocery_agent
+.env
+>>>>>>> b7c255a151dbec0b83e71c636ef2143a9a56227e
