@@ -34,8 +34,8 @@ def test_image_tool():
         print("4. Run: python setup_environment.py")
         return False
     
-    # Test with the existing CostcoBill.jpeg
-    image_path = "src/smart_shop/images/CostcoBill.jpeg"
+    # Test with the existing image
+    image_path = "src/smart_shop/images/CostcoBill2.jpeg"
     
     if not os.path.exists(image_path):
         print(f"❌ Test image not found: {image_path}")
@@ -43,6 +43,8 @@ def test_image_tool():
     
     try:
         tool = ImageToJSONTool()
+        
+        # Use a specific prompt to ensure we get data from the actual image
         result = tool._run(
             image_path=image_path,
             output_path="test_output.json"
@@ -50,7 +52,28 @@ def test_image_tool():
         
         print("✅ ImageToJSONTool test successful!")
         print(f"📁 Output saved to: test_output.json")
-        print(f"📊 Result preview: {result[:200]}...")
+        
+        # Show detailed preview of the extracted data
+        import json
+        result_data = json.loads(result)
+        if result_data.get('success'):
+            print("\n📋 Extracted information preview:")
+            json_data = result_data.get('json_data', {})
+            if 'image_description' in json_data:
+                print(f"  Description: {json_data['image_description'][:100]}...")
+            if 'text' in json_data and 'items_purchased' in json_data['text']:
+                items = json_data['text']['items_purchased']
+                print(f"  Items found: {len(items)}")
+                for i, item in enumerate(items[:3]):  # Show first 3 items
+                    print(f"    {i+1}. {item.get('item', 'Unknown')} - ${item.get('price', 0)}")
+            if 'text' in json_data and 'totals' in json_data['text']:
+                totals = json_data['text']['totals']
+                print(f"  Total: ${totals.get('total', 0)}")
+        else:
+            print(f"❌ Error in result: {result_data.get('error', 'Unknown error')}")
+            return False
+        
+        print(f"📊 Full result preview: {result[:200]}...")
         return True
         
     except Exception as e:
@@ -73,6 +96,7 @@ def test_crew_integration():
             print("✅ Image processor agent found in crew")
         else:
             print("❌ Image processor agent not found in crew")
+            print(f"Available agents: {[attr for attr in dir(crew_instance) if not attr.startswith('_')]}")
             return False
         
         # Check if the image_processing_task exists

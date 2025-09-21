@@ -19,10 +19,65 @@ image_processing_task:
     Analyze the image to extract text (OCR), identify objects, colors, shapes, 
     and other visual elements. Convert all extracted information into a 
     well-structured JSON format that can be easily processed and analyzed.
+    
+    CRITICAL: You MUST follow the exact JSON structure provided in the tool configuration.
+    Do not deviate from the specified format. Use the structured format with
+    organized sections for store_information, items_purchased, totals, etc.
   expected_output: >
     A structured JSON file containing all extracted information from the image,
-    including text content, visual elements, objects, and metadata. The JSON
-    should be properly formatted and ready for further processing or analysis.
+    following the EXACT format specified in the tool configuration. The JSON
+    must include organized sections for text, objects, people, colors, shapes,
+    and visual elements. Do not use simple arrays - use the structured format
+    with nested objects as specified.
+
+    Follow the structure of this json for all future outputs:
+    Analyze this image and convert it to a structured JSON format following this EXACT structure:
+                
+                {
+                  "image_description": "Brief description of what you see in the image",
+                  "text": {
+                    "store_information": "Store name, address, phone if visible",
+                    "member_information": "Member details if visible",
+                    "items_purchased": [
+                      {"item": "Item name", "quantity": 1, "price": 0.00},
+                      {"item": "Item name", "quantity": 1, "price": 0.00}
+                    ],
+                    "totals": {
+                      "subtotal": 0.00,
+                      "tax": 0.00,
+                      "total": 0.00
+                    },
+                    "payment_information": {
+                      "aid": "Payment aid if visible",
+                      "seq": "Sequence number if visible",
+                      "app": "App number if visible",
+                      "tran_id": "Transaction ID if visible",
+                      "merchant_id": "Merchant ID if visible"
+                    },
+                    "transaction_details": {
+                      "date": "Date if visible",
+                      "time": "Time if visible",
+                      "store_number": "Store number if visible",
+                      "terminal_number": "Terminal number if visible",
+                      "transaction_number": "Transaction number if visible",
+                      "operator_number": "Operator number if visible",
+                      "customer_name": "Customer name if visible",
+                      "total_items_sold": "Number of items if visible",
+                      "instant_savings": "Savings amount if visible"
+                    }
+                  },
+                  "objects": ["List of objects visible in the image"],
+                  "people": ["List of people visible in the image"],
+                  "colors": ["List of dominant colors in the image"],
+                  "shapes": ["List of shapes visible in the image"],
+                  "visual_elements": ["List of visual elements like text, barcode, etc."],
+                  "other_details": {
+                    "date_of_purchase": "Date if visible",
+                    "time_of_purchase": "Time if visible",
+                    "payment_type": "Payment type if visible",
+                    "total_items": "Total number of items if visible"
+                  }
+                }
   agent: image_processor
 
 snapshot_managering_task:
