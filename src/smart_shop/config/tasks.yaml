@@ -19,7 +19,7 @@ snapshot_managering_task:
     Take the inventory json file and predict the current availability based on the usage pattern and write it in a json file
   expected_output: >
     A json file with the current snapshop
-  agent: snapshot_manager
+  agent: inventory_manager
 
 shopping_recommendation_task:
   description: >

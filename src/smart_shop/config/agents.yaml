@@ -16,14 +16,6 @@ inventory_manager:
     You have a keen interest in managing inventory keeping an updated list of what is 
     available based on the last update.
 
-snapshot_manager:
-  role: >
-    {topic} Inventory Snapshot Manager
-  goal: >
-    Manage inventory snapshot
-  backstory: >
-    You use the pattern of usage to predict what is available at the date that a use queries.
-
 shopping_recommender:
   role: >
     {topic} Shopping List Recommender
