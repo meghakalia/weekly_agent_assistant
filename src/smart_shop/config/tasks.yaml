@@ -13,6 +13,17 @@ inventory_managing_task:
   expected_output: >
     A json file with the inventory
   agent: inventory_manager
+image_processing_task:
+  description: >
+    Process the provided image and convert it to structured JSON format. 
+    Analyze the image to extract text (OCR), identify objects, colors, shapes, 
+    and other visual elements. Convert all extracted information into a 
+    well-structured JSON format that can be easily processed and analyzed.
+  expected_output: >
+    A structured JSON file containing all extracted information from the image,
+    including text content, visual elements, objects, and metadata. The JSON
+    should be properly formatted and ready for further processing or analysis.
+  agent: image_processor
 
 snapshot_managering_task:
   description: >

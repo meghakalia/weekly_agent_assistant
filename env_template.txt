@@ -1,0 +1,18 @@
+# Environment Variables for SmartShop Crew with Image Processing
+# Copy this file to .env and fill in your actual values
+
+# Google AI API Key (required for image processing)
+# Get your API key from: https://makersuite.google.com/app/apikey
+GOOGLE_AI_API_KEY=your_google_ai_api_key_here
+
+# Optional: Set default output directory for processed images
+OUTPUT_DIR=./outputs
+
+# Optional: Set default max tokens for AI responses
+MAX_TOKENS=4096
+
+# Optional: Set temperature for AI model (0.0 to 1.0)
+TEMPERATURE=0.1
+
+# Optional: Enable verbose logging
+VERBOSE=true

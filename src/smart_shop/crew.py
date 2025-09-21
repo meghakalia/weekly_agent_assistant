@@ -2,6 +2,12 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
+from .tools.image_to_json_tool import ImageToJSONTool
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # If you want to run a snippet of code before or after the crew starts,
 # you can use the @before_kickoff and @after_kickoff decorators
@@ -14,6 +20,27 @@ class SmartShop:
 
     agents: List[BaseAgent]
     tasks: List[Task]
+
+    def __init__(self):
+        """Initialize the crew and validate environment setup."""
+        super().__init__()
+        self._validate_environment()
+
+    def _validate_environment(self):
+        """Validate that required environment variables are set."""
+        required_vars = ['GOOGLE_AI_API_KEY']
+        missing_vars = []
+        
+        for var in required_vars:
+            if not os.getenv(var):
+                missing_vars.append(var)
+        
+        if missing_vars:
+            raise ValueError(
+                f"Missing required environment variables: {', '.join(missing_vars)}\n"
+                f"Please set these variables in your .env file or environment.\n"
+                f"See env_template.txt for reference."
+            )
 
     # Learn more about YAML configuration files here:
     # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
@@ -49,6 +76,14 @@ class SmartShop:
             verbose=True,
         )
 
+    @agent
+    def image_processor(self) -> Agent:
+        return Agent(
+            config=self.agents_config['image_processor'], # type: ignore[index]
+            tools=[ImageToJSONTool()],
+            verbose=True
+        )
+
     # To learn more about structured task outputs,
     # task dependencies, and task callbacks, check out the documentation:
     # https://docs.crewai.com/concepts/tasks#overview-of-a-task
@@ -78,6 +113,13 @@ class SmartShop:
         return Task(
             config=self.tasks_config["shopping_recommendation_task"],  # type: ignore[index]
             output_file="shopping_recommendation.json",
+        )
+
+    @task
+    def image_processing_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['image_processing_task'], # type: ignore[index]
+            output_file='image_analysis.json'
         )
 
     @crew

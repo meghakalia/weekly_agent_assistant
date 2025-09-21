@@ -1,0 +1,52 @@
+{
+  "success": true,
+  "json_data": {
+    "items": [
+      {
+        "item": "FIRESTON ALE",
+        "price": 25.99
+      },
+      {
+        "item": "DINNER PLATE",
+        "price": 1.2
+      },
+      {
+        "item": "RUFFLES 280Z",
+        "price": 5.49
+      },
+      {
+        "item": "TRITAN BEV",
+        "price": 5.4
+      },
+      {
+        "item": "KS RED COPS",
+        "price": 9.97
+      },
+      {
+        "item": "RAZER BUNDLE",
+        "price": 169.99
+      },
+      {
+        "item": "CUTLRY",
+        "price": 8.79
+      },
+      {
+        "item": "KS FRN ODKA",
+        "price": 18.99
+      }
+    ],
+    "subtotal": 259.4,
+    "tax": 19.68,
+    "total": 279.08
+  },
+  "metadata": {
+    "image_path": "src/smart_shop/images/CostcoBill.jpeg",
+    "image_size": [
+      473,
+      1024
+    ],
+    "model": "gemini-1.5-flash",
+    "tokens_used": 70,
+    "raw_response": "```json\n{\n  \"items\": [\n    {\n      \"item\": \"FIRESTON ALE\",\n      \"price\": 25.99\n    },\n    {\n      \"item\": \"DINNER PLATE\",\n      \"price\": 1.20\n    },\n    {\n      \"item\": \"RUFFLES 280Z\",\n      \"price\": 5.49\n    },\n    {\n      \"item\": \"TRITAN BEV\",\n      \"price\": 5.40\n    },\n    {\n      \"item\": \"KS RED COPS\",\n      \"price\": 9.97\n    },\n    {\n      \"item\": \"RAZER BUNDLE\",\n      \"price\": 169.99\n    },\n    {\n      \"item\": \"CUTLRY\",\n      \"price\": 8.79\n    },\n    {\n      \"item\": \"KS FRN ODKA\",\n      \"price\": 18.99\n    }\n  ],\n  \"subtotal\": 259.40,\n  \"tax\": 19.68,\n  \"total\": 279.08\n}\n```"
+  }
+}
