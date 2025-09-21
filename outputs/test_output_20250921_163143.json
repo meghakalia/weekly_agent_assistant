@@ -1,0 +1,115 @@
+{
+  "success": true,
+  "json_data": {
+    "image_description": "A Costco Wholesale receipt showing a purchase made by Margarita M on July 28, 2021, at 6:23 PM.",
+    "text": {
+      "store_information": "Costco Wholesale #627\n16505 Sierra Lakes Parkway\nFontana, CA 92336\n(909) 770-5639",
+      "member_information": "Member 111913632629",
+      "items_purchased": [
+        {
+          "item": "FIRESTON ALE",
+          "quantity": 1,
+          "price": 25.99
+        },
+        {
+          "item": "CA REDEMP VA",
+          "quantity": 1,
+          "price": 1.2
+        },
+        {
+          "item": "DINNER PLATE",
+          "quantity": 1,
+          "price": 14.89
+        },
+        {
+          "item": "RUFFLES 28OZ",
+          "quantity": 1,
+          "price": 5.49
+        },
+        {
+          "item": "TRITAN BEV",
+          "quantity": 1,
+          "price": 5.49
+        },
+        {
+          "item": "KS RED COPS",
+          "quantity": 1,
+          "price": 9.97
+        },
+        {
+          "item": "RAZER BUNDLE",
+          "quantity": 1,
+          "price": 169.99
+        },
+        {
+          "item": "CUTLRY",
+          "quantity": 1,
+          "price": 8.79
+        },
+        {
+          "item": "KS FRN ODKA",
+          "quantity": 1,
+          "price": 18.99
+        }
+      ],
+      "totals": {
+        "subtotal": 259.4,
+        "tax": 19.68,
+        "total": 279.08
+      },
+      "payment_information": {
+        "aid": "A0000000980840",
+        "seq": "10943",
+        "app": "765953",
+        "tran_id": "120900010943",
+        "merchant_id": "990627"
+      },
+      "transaction_details": {
+        "date": "07/28/2021",
+        "time": "18:23",
+        "store_number": "627",
+        "terminal_number": "10",
+        "transaction_number": "374",
+        "operator_number": "213",
+        "customer_name": "Margarita M",
+        "total_items_sold": "8",
+        "instant_savings": "5.40"
+      }
+    },
+    "objects": [
+      "receipt",
+      "barcode"
+    ],
+    "people": [
+      "Margarita M"
+    ],
+    "colors": [
+      "white",
+      "black"
+    ],
+    "shapes": [
+      "rectangle"
+    ],
+    "visual_elements": [
+      "text",
+      "barcode",
+      "numbers"
+    ],
+    "other_details": {
+      "date_of_purchase": "07/28/2021",
+      "time_of_purchase": "18:23",
+      "payment_type": "EFT/Debit",
+      "total_items": "8"
+    }
+  },
+  "metadata": {
+    "image_path": "src/smart_shop/images/CostcoBill.jpeg",
+    "image_size": [
+      473,
+      1024
+    ],
+    "model": "gemini-1.5-flash",
+    "tokens_used": 177,
+    "raw_response": "```json\n{\n  \"image_description\": \"A Costco Wholesale receipt showing a purchase made by Margarita M on July 28, 2021, at 6:23 PM.\",\n  \"text\": {\n    \"store_information\": \"Costco Wholesale #627\\n16505 Sierra Lakes Parkway\\nFontana, CA 92336\\n(909) 770-5639\",\n    \"member_information\": \"Member 111913632629\",\n    \"items_purchased\": [\n      {\"item\": \"FIRESTON ALE\", \"quantity\": 1, \"price\": 25.99},\n      {\"item\": \"CA REDEMP VA\", \"quantity\": 1, \"price\": 1.20},\n      {\"item\": \"DINNER PLATE\", \"quantity\": 1, \"price\": 14.89},\n      {\"item\": \"RUFFLES 28OZ\", \"quantity\": 1, \"price\": 5.49},\n      {\"item\": \"TRITAN BEV\", \"quantity\": 1, \"price\": 5.49},\n      {\"item\": \"KS RED COPS\", \"quantity\": 1, \"price\": 9.97},\n      {\"item\": \"RAZER BUNDLE\", \"quantity\": 1, \"price\": 169.99},\n      {\"item\": \"CUTLRY\", \"quantity\": 1, \"price\": 8.79},\n      {\"item\": \"KS FRN ODKA\", \"quantity\": 1, \"price\": 18.99}\n    ],\n    \"totals\": {\n      \"subtotal\": 259.40,\n      \"tax\": 19.68,\n      \"total\": 279.08\n    },\n    \"payment_information\": {\n      \"aid\": \"A0000000980840\",\n      \"seq\": \"10943\",\n      \"app\": \"765953\",\n      \"tran_id\": \"120900010943\",\n      \"merchant_id\": \"990627\"\n    },\n    \"transaction_details\": {\n      \"date\": \"07/28/2021\",\n      \"time\": \"18:23\",\n      \"store_number\": \"627\",\n      \"terminal_number\": \"10\",\n      \"transaction_number\": \"374\",\n      \"operator_number\": \"213\",\n      \"customer_name\": \"Margarita M\",\n      \"total_items_sold\": \"8\",\n      \"instant_savings\": \"5.40\"\n    }\n  },\n  \"objects\": [\"receipt\", \"barcode\"],\n  \"people\": [\"Margarita M\"],\n  \"colors\": [\"white\", \"black\"],\n  \"shapes\": [\"rectangle\"],\n  \"visual_elements\": [\"text\", \"barcode\", \"numbers\"],\n  \"other_details\": {\n    \"date_of_purchase\": \"07/28/2021\",\n    \"time_of_purchase\": \"18:23\",\n    \"payment_type\": \"EFT/Debit\",\n    \"total_items\": \"8\"\n  }\n}\n```"
+  }
+}
