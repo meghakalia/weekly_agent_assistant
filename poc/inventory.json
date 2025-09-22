@@ -1,0 +1,95 @@
+{
+  "inventory": {
+    "Dairy": {
+      "Milk": {
+        "milk_2_percent_gallon": {
+          "name": "Milk 2% - 1 Gallon",
+          "quantity": 0.5,
+          "unit": "gallon",
+          "expiry_date": "2025-09-28",
+          "last_updated": "2025-09-21"
+        }
+      },
+      "Eggs": {
+        "eggs_dozen": {
+          "name": "Eggs - 12 count",
+          "quantity": 8,
+          "unit": "pieces",
+          "expiry_date": "2025-10-02",
+          "last_updated": "2025-09-20"
+        }
+      }
+    },
+    "Fruit": {
+      "Bananas": {
+        "bananas": {
+          "name": "Bananas",
+          "quantity": 2,
+          "unit": "pieces",
+          "expiry_date": "2025-09-23",
+          "last_updated": "2025-09-20"
+        }
+      },
+      "Apples": {
+        "apples_fuji": {
+          "name": "Apples - Fuji",
+          "quantity": 3,
+          "unit": "pieces",
+          "expiry_date": "2025-09-26",
+          "last_updated": "2025-09-19"
+        }
+      }
+    },
+    "Bakery": {
+      "Bread": {
+        "whole_wheat_bread": {
+          "name": "Whole Wheat Bread",
+          "quantity": 0.5,
+          "unit": "loaf",
+          "expiry_date": "2025-09-22",
+          "last_updated": "2025-09-20"
+        }
+      }
+    },
+    "Protein": {
+      "Chicken": {
+        "chicken_breast": {
+          "name": "Chicken breasts",
+          "quantity": 1,
+          "unit": "lb",
+          "expiry_date": "2025-09-25",
+          "last_updated": "2025-09-19"
+        }
+      }
+    },
+    "Pantry": {
+      "Rice": {
+        "long_grain_rice": {
+          "name": "Long grain rice",
+          "quantity": 0.5,
+          "unit": "kg",
+          "expiry_date": "2026-01-01",
+          "last_updated": "2025-09-18"
+        }
+      },
+      "Coffee": {
+        "ground_coffee": {
+          "name": "Ground coffee - 1 lb",
+          "quantity": 0.25,
+          "unit": "lb",
+          "expiry_date": "2026-03-01",
+          "last_updated": "2025-09-18"
+        }
+      },
+      "Oats": {
+        "rolled_oats": {
+          "name": "Rolled oats 1kg",
+          "quantity": 0.1,
+          "unit": "kg",
+          "expiry_date": "2026-01-01",
+          "last_updated": "2025-09-18"
+        }
+      }
+    }
+  }
+}

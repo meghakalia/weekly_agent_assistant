@@ -1,0 +1,112 @@
+{
+  "success": true,
+  "json_data": {
+    "image_description": "A Costco Wholesale receipt showing a purchase of 7 items with a total of $80.85.",
+    "text": {
+      "store_information": "COSTCO WHOLESALE\n605 Expo Blvd\nVancouver, BC V6B 1V4",
+      "member_information": "T4 Member 112019382105",
+      "items_purchased": [
+        {
+          "item": "KS ORG GRILA",
+          "quantity": 1,
+          "price": 11.49
+        },
+        {
+          "item": "CHOC COOKLE",
+          "quantity": 1,
+          "price": 11.99
+        },
+        {
+          "item": "LOLE PANT",
+          "quantity": 1,
+          "price": 19.99
+        },
+        {
+          "item": "TPD/PANTS",
+          "quantity": 1,
+          "price": 4.0
+        },
+        {
+          "item": "JAM VITD2500",
+          "quantity": 1,
+          "price": 13.99
+        },
+        {
+          "item": "TPD/3941402",
+          "quantity": 1,
+          "price": 4.0
+        },
+        {
+          "item": "CLEMENTINES",
+          "quantity": 1,
+          "price": 9.99
+        },
+        {
+          "item": "ORGANIC OATS",
+          "quantity": 2,
+          "price": 21.98
+        },
+        {
+          "item": "CPN/2222019",
+          "quantity": 1,
+          "price": 3.0
+        }
+      ],
+      "totals": {
+        "subtotal": 78.43,
+        "tax": 2.42,
+        "total": 80.85
+      },
+      "payment_information": {
+        "aid": "XXXXXXXXXXXX2601",
+        "seq": "0010012360",
+        "app": null,
+        "tran_id": "633483",
+        "merchant_id": null
+      },
+      "transaction_details": {
+        "date": "2025/09/21",
+        "time": "14:35:49",
+        "store_number": "552",
+        "terminal_number": "13",
+        "transaction_number": "291",
+        "operator_number": "82",
+        "customer_name": "Jeffrey P.",
+        "total_items_sold": 7,
+        "instant_savings": 11.0
+      }
+    },
+    "objects": [
+      "receipt",
+      "notebook"
+    ],
+    "people": [],
+    "colors": [
+      "white",
+      "black"
+    ],
+    "shapes": [
+      "rectangle"
+    ],
+    "visual_elements": [
+      "text",
+      "barcode"
+    ],
+    "other_details": {
+      "date_of_purchase": "2025/09/21",
+      "time_of_purchase": "14:35:49",
+      "payment_type": "Interac",
+      "total_items": 7
+    }
+  },
+  "metadata": {
+    "image_path": "src/smart_shop/images/CostcoBill2.jpeg",
+    "image_size": [
+      960,
+      1280
+    ],
+    "model": "gemini-1.5-flash",
+    "tokens_used": 166,
+    "raw_response": "```json\n{\n  \"image_description\": \"A Costco Wholesale receipt showing a purchase of 7 items with a total of $80.85.\",\n  \"text\": {\n    \"store_information\": \"COSTCO WHOLESALE\\n605 Expo Blvd\\nVancouver, BC V6B 1V4\",\n    \"member_information\": \"T4 Member 112019382105\",\n    \"items_purchased\": [\n      {\"item\": \"KS ORG GRILA\", \"quantity\": 1, \"price\": 11.49},\n      {\"item\": \"CHOC COOKLE\", \"quantity\": 1, \"price\": 11.99},\n      {\"item\": \"LOLE PANT\", \"quantity\": 1, \"price\": 19.99},\n      {\"item\": \"TPD/PANTS\", \"quantity\": 1, \"price\": 4.00},\n      {\"item\": \"JAM VITD2500\", \"quantity\": 1, \"price\": 13.99},\n      {\"item\": \"TPD/3941402\", \"quantity\": 1, \"price\": 4.00},\n      {\"item\": \"CLEMENTINES\", \"quantity\": 1, \"price\": 9.99},\n      {\"item\": \"ORGANIC OATS\", \"quantity\": 2, \"price\": 21.98},\n      {\"item\": \"CPN/2222019\", \"quantity\": 1, \"price\": 3.00}\n    ],\n    \"totals\": {\n      \"subtotal\": 78.43,\n      \"tax\": 2.42,\n      \"total\": 80.85\n    },\n    \"payment_information\": {\n      \"aid\": \"XXXXXXXXXXXX2601\",\n      \"seq\": \"0010012360\",\n      \"app\": null,\n      \"tran_id\": \"633483\",\n      \"merchant_id\": null\n    },\n    \"transaction_details\": {\n      \"date\": \"2025/09/21\",\n      \"time\": \"14:35:49\",\n      \"store_number\": \"552\",\n      \"terminal_number\": \"13\",\n      \"transaction_number\": \"291\",\n      \"operator_number\": \"82\",\n      \"customer_name\": \"Jeffrey P.\",\n      \"total_items_sold\": 7,\n      \"instant_savings\": 11.00\n    }\n  },\n  \"objects\": [\"receipt\", \"notebook\"],\n  \"people\": [],\n  \"colors\": [\"white\", \"black\"],\n  \"shapes\": [\"rectangle\"],\n  \"visual_elements\": [\"text\", \"barcode\"],\n  \"other_details\": {\n    \"date_of_purchase\": \"2025/09/21\",\n    \"time_of_purchase\": \"14:35:49\",\n    \"payment_type\": \"Interac\",\n    \"total_items\": 7\n  }\n}\n```"
+  }
+}

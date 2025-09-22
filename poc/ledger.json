@@ -1,0 +1,92 @@
+{
+  "ledger": [
+    {
+      "date": "2025-08-25",
+      "items": {
+        "milk_2_percent_gallon": {
+          "quantity": 1,
+          "unit": "gallon"
+        },
+        "eggs_dozen": {
+          "quantity": 12,
+          "unit": "pieces"
+        },
+        "bananas": {
+          "quantity": 6,
+          "unit": "pieces"
+        },
+        "whole_wheat_bread": {
+          "quantity": 1,
+          "unit": "loaf"
+        },
+        "chicken_breast": {
+          "quantity": 2,
+          "unit": "lb"
+        }
+      }
+    },
+    {
+      "date": "2025-09-01",
+      "items": {
+        "milk_2_percent_gallon": {
+          "quantity": 1,
+          "unit": "gallon"
+        },
+        "eggs_dozen": {
+          "quantity": 12,
+          "unit": "pieces"
+        },
+        "apples_fuji": {
+          "quantity": 6,
+          "unit": "pieces"
+        },
+        "long_grain_rice": {
+          "quantity": 2,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "date": "2025-09-08",
+      "items": {
+        "milk_2_percent_gallon": {
+          "quantity": 1,
+          "unit": "gallon"
+        },
+        "bananas": {
+          "quantity": 6,
+          "unit": "pieces"
+        },
+        "ground_coffee": {
+          "quantity": 1,
+          "unit": "lb"
+        },
+        "rolled_oats": {
+          "quantity": 1,
+          "unit": "kg"
+        }
+      }
+    },
+    {
+      "date": "2025-09-15",
+      "items": {
+        "milk_2_percent_gallon": {
+          "quantity": 1,
+          "unit": "gallon"
+        },
+        "eggs_dozen": {
+          "quantity": 12,
+          "unit": "pieces"
+        },
+        "apples_fuji": {
+          "quantity": 6,
+          "unit": "pieces"
+        },
+        "chicken_breast": {
+          "quantity": 2,
+          "unit": "lb"
+        }
+      }
+    }
+  ]
+}
