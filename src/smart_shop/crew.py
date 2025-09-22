@@ -3,8 +3,10 @@ from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
 from .tools.image_to_json_tool import ImageToJSONTool
+from .tools.inventory_creator_tool import InventoryCreatorTool
 import os
 from dotenv import load_dotenv
+from crewai.llm import LLM
 
 # Load environment variables from .env file
 load_dotenv()
@@ -38,6 +40,14 @@ class SmartShop():
                 f"See env_template.txt for reference."
             )
 
+    def _get_llm(self):
+        """Configure LLM to use Google's Gemini model."""
+        return LLM(
+            model="gemini/gemini-1.5-flash",
+            api_key=os.getenv('GOOGLE_AI_API_KEY'),
+            temperature=0.1
+        )
+
     # Learn more about YAML configuration files here:
     # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
     # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
@@ -45,43 +55,26 @@ class SmartShop():
     # If you would like to add tools to your agents, you can learn more about it here:
     # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
-    def researcher(self) -> Agent:
-        return Agent(
-            config=self.agents_config['researcher'], # type: ignore[index]
-            verbose=True
-        )
-
-    @agent
-    def reporting_analyst(self) -> Agent:
-        return Agent(
-            config=self.agents_config['reporting_analyst'], # type: ignore[index]
-            verbose=True
-        )
-
-    @agent
     def image_processor(self) -> Agent:
         return Agent(
-            config=self.agents_config['image_to_json_convertor'], # type: ignore[index]
+            config=self.agents_config['image_processor'], # type: ignore[index]
             tools=[ImageToJSONTool()],
+            llm=self._get_llm(),
             verbose=True
+        )
+    
+    @agent
+    def inventory_manager(self) -> Agent:
+        return Agent(
+            config=self.agents_config["inventory_manager"],  # type: ignore[index]
+            tools=[InventoryCreatorTool()],
+            llm=self._get_llm(),
+            verbose=True,
         )
 
     # To learn more about structured task outputs,
     # task dependencies, and task callbacks, check out the documentation:
     # https://docs.crewai.com/concepts/tasks#overview-of-a-task
-    @task
-    def research_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['research_task'], # type: ignore[index]
-        )
-
-    @task
-    def reporting_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['reporting_task'], # type: ignore[index]
-            output_file='report.md'
-        )
-
     @task
     def image_processing_task(self) -> Task:
         # Generate unique filename with timestamp
@@ -91,7 +84,21 @@ class SmartShop():
         
         return Task(
             config=self.tasks_config['image_processing_task'], # type: ignore[index]
+            agent=self.image_processor(),  # Explicitly assign to image_processor agent
             output_file=unique_filename
+        )
+    
+    @task
+    def inventory_managing_task(self) -> Task:
+        # Generate unique filename with timestamp for inventory
+        from datetime import datetime
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        inventory_filename = f'inventory_{timestamp}.json'
+        
+        return Task(
+            config=self.tasks_config["inventory_managing_task"],  # type: ignore[index]
+            agent=self.inventory_manager(),  # Explicitly assign to inventory_manager agent
+            output_file=inventory_filename
         )
 
     @crew
@@ -105,5 +112,4 @@ class SmartShop():
             tasks=self.tasks, # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=True,
-            # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
         )

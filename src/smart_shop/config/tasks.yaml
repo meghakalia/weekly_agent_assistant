@@ -1,18 +1,3 @@
-image_to_json_task:
-  description: >
-    Convert the image data to json {image}
-    Make sure you have the date from the uploaded image {bill_date}.
-  expected_output: >
-    A json file from the bill in the {image}
-  agent: image_to_json_convertor
-
-inventory_managing_task:
-  description: >
-    Take the context you got and update the inventory as a json file.
-    Make sure the inventory has the date you found from the context.
-  expected_output: >
-    A json file with the inventory
-  agent: inventory_manager
 image_processing_task:
   description: >
     Process the provided image and convert it to structured JSON format. 
@@ -20,9 +5,17 @@ image_processing_task:
     and other visual elements. Convert all extracted information into a 
     well-structured JSON format that can be easily processed and analyzed.
     
-    CRITICAL: You MUST follow the exact JSON structure provided in the tool configuration.
-    Do not deviate from the specified format. Use the structured format with
-    organized sections for store_information, items_purchased, totals, etc.
+    Use the ImageToJSONTool to process the image and extract structured data.
+    The tool will handle the image analysis and return a properly formatted JSON.
+    
+    CRITICAL: You MUST use the ImageToJSONTool to process the image.
+    Do not attempt to analyze the image manually - delegate to the tool.
+    
+    The image path is: {image_path}
+    
+    IMPORTANT: When calling the ImageToJSONTool, generate a unique output filename 
+    using a timestamp format like "image_analysis_YYYYMMDD_HHMMSS.json" to avoid 
+    overwriting existing files.
   expected_output: >
     A structured JSON file containing all extracted information from the image,
     following the EXACT format specified in the tool configuration. The JSON
@@ -30,66 +23,83 @@ image_processing_task:
     and visual elements. Do not use simple arrays - use the structured format
     with nested objects as specified.
 
-    Follow the structure of this json for all future outputs:
-    Analyze this image and convert it to a structured JSON format following this EXACT structure:
-                
-                {
-                  "image_description": "Brief description of what you see in the image",
-                  "text": {
-                    "store_information": "Store name, address, phone if visible",
-                    "member_information": "Member details if visible",
-                    "items_purchased": [
-                      {"item": "Item name", "quantity": 1, "price": 0.00},
-                      {"item": "Item name", "quantity": 1, "price": 0.00}
-                    ],
-                    "totals": {
-                      "subtotal": 0.00,
-                      "tax": 0.00,
-                      "total": 0.00
-                    },
-                    "payment_information": {
-                      "aid": "Payment aid if visible",
-                      "seq": "Sequence number if visible",
-                      "app": "App number if visible",
-                      "tran_id": "Transaction ID if visible",
-                      "merchant_id": "Merchant ID if visible"
-                    },
-                    "transaction_details": {
-                      "date": "Date if visible",
-                      "time": "Time if visible",
-                      "store_number": "Store number if visible",
-                      "terminal_number": "Terminal number if visible",
-                      "transaction_number": "Transaction number if visible",
-                      "operator_number": "Operator number if visible",
-                      "customer_name": "Customer name if visible",
-                      "total_items_sold": "Number of items if visible",
-                      "instant_savings": "Savings amount if visible"
-                    }
-                  },
-                  "objects": ["List of objects visible in the image"],
-                  "people": ["List of people visible in the image"],
-                  "colors": ["List of dominant colors in the image"],
-                  "shapes": ["List of shapes visible in the image"],
-                  "visual_elements": ["List of visual elements like text, barcode, etc."],
-                  "other_details": {
-                    "date_of_purchase": "Date if visible",
-                    "time_of_purchase": "Time if visible",
-                    "payment_type": "Payment type if visible",
-                    "total_items": "Total number of items if visible"
-                  }
-                }
+    The output should follow this structure:
+    {
+      "success": true,
+      "json_data": {
+        "image_description": "Brief description of what you see in the image",
+        "text": {
+          "store_information": "Store name, address, phone if visible",
+          "member_information": "Member details if visible",
+          "items_purchased": [
+            {"item": "Item name", "quantity": 1, "price": 0.00},
+            {"item": "Item name", "quantity": 1, "price": 0.00}
+          ],
+          "totals": {
+            "subtotal": 0.00,
+            "tax": 0.00,
+            "total": 0.00
+          },
+          "payment_information": {
+            "aid": "Payment aid if visible",
+            "seq": "Sequence number if visible",
+            "app": "App number if visible",
+            "tran_id": "Transaction ID if visible",
+            "merchant_id": "Merchant ID if visible"
+          },
+          "transaction_details": {
+            "date": "Date if visible",
+            "time": "Time if visible",
+            "store_number": "Store number if visible",
+            "terminal_number": "Terminal number if visible",
+            "transaction_number": "Transaction number if visible",
+            "operator_number": "Operator number if visible",
+            "customer_name": "Customer name if visible",
+            "total_items_sold": "Number of items if visible",
+            "instant_savings": "Savings amount if visible"
+          }
+        },
+        "objects": ["List of objects visible in the image"],
+        "people": ["List of people visible in the image"],
+        "colors": ["List of dominant colors in the image"],
+        "shapes": ["List of shapes visible in the image"],
+        "visual_elements": ["List of visual elements like text, barcode, etc."],
+        "other_details": {
+          "date_of_purchase": "Date if visible",
+          "time_of_purchase": "Time if visible",
+          "payment_type": "Payment type if visible",
+          "total_items": "Total number of items if visible"
+        }
+      }
+    }
   agent: image_processor
 
-snapshot_managering_task:
+inventory_managing_task:
   description: >
-    Take the inventory json file and predict the current availability based on the usage pattern and write it in a json file
+    Use the inventory_creator tool to read the latest image_analysis_*.json file from the outputs directory 
+    (created by the previous image_processing_task) and create an inventory JSON file.
+    The tool will automatically find the most recent image analysis file and extract the data.
+    Do NOT process the image again - use the inventory_creator tool to read the existing data.
+    Create a structured inventory JSON file with the items, quantities, prices, and date from the receipt.
+    Make sure the inventory has the date you found from the context.
+    
+    CRITICAL: You MUST use the inventory_creator tool to process the data.
+    Do not attempt to read files manually - delegate to the tool.
   expected_output: >
-    A json file with the current snapshop
-  agent: snapshot_manager
+    A structured inventory JSON file with the following format:
+    {
+      "inventory": {
+        "date": "YYYY-MM-DD",
+        "items": [
+          {
+            "item": "Item name",
+            "quantity": 1,
+            "price": 0.00
+          }
+        ],
+        "total_items": 0,
+        "total_value": 0.00
+      }
+    }
+  agent: inventory_manager
 
-shopping_recommendation_task:
-  description: >
-    When propted by the user, use the json file with the current snapshop to determine the shopping recommendation on the day
-  expected_output: >
-    A json file with the shopping recommendation
-  agent: shopping_recommender

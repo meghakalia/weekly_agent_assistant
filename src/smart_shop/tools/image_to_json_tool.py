@@ -230,23 +230,27 @@ class ImageToJSONTool(BaseTool):
                 }
             }
             
-            # Save to file if output_path is provided
-            if output_path:
-                try:
-                    # Use configured output directory if path is relative
-                    if not os.path.isabs(output_path):
-                        output_path = os.path.join(config['output_dir'], output_path)
-                    
-                    # Generate unique filename to avoid overwriting
-                    unique_output_path = self._generate_unique_filename(output_path)
-                    
-                    with open(unique_output_path, 'w', encoding='utf-8') as f:
-                        json.dump(result, f, indent=2, ensure_ascii=False)
-                    result["output_file"] = unique_output_path
-                    result["original_path"] = output_path
-                    result["unique_filename"] = True
-                except Exception as e:
-                    result["save_error"] = str(e)
+            # Save to file - generate unique filename if output_path is not provided
+            if not output_path:
+                # Generate a unique filename with timestamp
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                output_path = f"image_analysis_{timestamp}.json"
+            
+            try:
+                # Use configured output directory if path is relative
+                if not os.path.isabs(output_path):
+                    output_path = os.path.join(config['output_dir'], output_path)
+                
+                # Generate unique filename to avoid overwriting
+                unique_output_path = self._generate_unique_filename(output_path)
+                
+                with open(unique_output_path, 'w', encoding='utf-8') as f:
+                    json.dump(result, f, indent=2, ensure_ascii=False)
+                result["output_file"] = unique_output_path
+                result["original_path"] = output_path
+                result["unique_filename"] = True
+            except Exception as e:
+                result["save_error"] = str(e)
             
             return json.dumps(result, indent=2)
             
