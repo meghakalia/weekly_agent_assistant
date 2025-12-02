@@ -1,0 +1,4 @@
+# Lightweight dependencies for Vercel serverless functions
+Pillow==10.1.0
+google-generativeai==0.8.5
+pydantic==2.5.0

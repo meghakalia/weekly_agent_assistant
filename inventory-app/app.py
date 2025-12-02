@@ -612,4 +612,9 @@ def health_check():
 if __name__ == '__main__':
     logger.info("Starting Flask application...")
     logger.info(f"Upload folder: {UPLOAD_FOLDER}")
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    
+    # Get port from environment variable (Railway/Render provide this)
+    port = int(os.getenv('PORT', 8000))
+    logger.info(f"Starting server on port {port}")
+    
+    app.run(host='0.0.0.0', port=port, debug=False)
