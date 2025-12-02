@@ -13,13 +13,18 @@ import logging
 import glob
 
 # Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src'))
+src_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src')
+if src_path not in sys.path:
+    sys.path.insert(0, src_path)
 
 try:
     from smart_shop.crew import SmartShop
     import google.generativeai as genai
+    logger.info("Successfully imported CrewAI modules")
 except ImportError as e:
-    logging.error(f"Import error: {e}")
+    logger.error(f"Import error: {e}")
+    logger.error(f"Python path: {sys.path}")
+    logger.error(f"Current directory: {os.getcwd()}")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -121,13 +126,25 @@ def home():
 @app.route('/health', methods=['GET'])
 def health():
     """Health check endpoint"""
+    # Check for required environment variables
+    env_status = "ok"
+    missing_vars = []
+    
+    required_vars = ['GEMINI_API_KEY']
+    for var in required_vars:
+        if not os.getenv(var):
+            missing_vars.append(var)
+            env_status = "missing_env_vars"
+    
     response = {
-        "status": "healthy",
+        "status": "healthy" if not missing_vars else "degraded",
         "timestamp": datetime.now().isoformat(),
         "service": "Weekly Grocery Agent API",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "env_status": env_status,
+        "missing_vars": missing_vars if missing_vars else None
     }
-    return jsonify(response)
+    return jsonify(response), 200 if not missing_vars else 200
 
 
 @app.route('/api/process-inventory', methods=['POST', 'OPTIONS'])
