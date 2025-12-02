@@ -1,0 +1,48 @@
+# Vercel Ignore File
+# Files and directories to exclude from Vercel deployment
+
+# Python virtual environments
+env_grocery_agent/
+venv/
+env/
+ENV/
+
+# Test files
+test_*.py
+*_test.py
+tests/
+
+# Documentation (except deployment guide)
+README.md
+TESTING_GUIDE.md
+VALIDATION_SUMMARY.md
+IMPLEMENTATION_SUMMARY.md
+WEEKLY_GROCERY_SYSTEM.md
+SHOPPING_LIST_UPDATE.md
+
+# Development scripts
+demo_complete_setup.py
+setup_environment.py
+test_*.sh
+
+# Large output files
+outputs/
+image_analysis_*.json
+inventory_*.json
+
+# Development only
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
