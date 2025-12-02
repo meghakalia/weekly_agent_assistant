@@ -10,7 +10,7 @@ import os
 import logging
 
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
+sys.path.append("/Users/megha/Documents/repos/weekly_grocery_agent/src")
 
 from smart_shop.crew import SmartShop
 import google.generativeai as genai
@@ -25,8 +25,8 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Enable CORS for all origins (update with your Vercel domain for production)
-CORS(app, origins=["*"])  # Allow all origins for now
+# Enable CORS for frontend connection
+CORS(app, origins=["http://localhost:3000", "https://your-frontend-domain.com"])
 
 # Configure upload settings
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -612,9 +612,4 @@ def health_check():
 if __name__ == '__main__':
     logger.info("Starting Flask application...")
     logger.info(f"Upload folder: {UPLOAD_FOLDER}")
-    
-    # Get port from environment variable (Railway/Render provide this)
-    port = int(os.getenv('PORT', 8000))
-    logger.info(f"Starting server on port {port}")
-    
-    app.run(host='0.0.0.0', port=port, debug=False)
+    app.run(host='0.0.0.0', port=8000, debug=True)

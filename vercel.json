@@ -1,0 +1,55 @@
+{
+  "version": 2,
+  "name": "weekly-grocery-agent",
+  "builds": [
+    {
+      "src": "inventory-app/package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "api/**/*.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/process-inventory",
+      "dest": "/api/process_inventory.py"
+    },
+    {
+      "src": "/api/generate-shopping-list",
+      "dest": "/api/generate_shopping_list.py"
+    },
+    {
+      "src": "/api/health",
+      "dest": "/api/health.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/inventory-app/$1"
+    }
+  ],
+  "env": {
+    "GEMINI_API_KEY": "@gemini_api_key",
+    "GOOGLE_AI_API_KEY": "@google_ai_api_key",
+    "OUTPUT_DIR": "/tmp/outputs",
+    "PYTHONPATH": "/var/task"
+  },
+  "functions": {
+    "api/**/*.py": {
+      "runtime": "python3.11",
+      "memory": 3008,
+      "maxDuration": 60
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/process-inventory",
+      "destination": "/api/process_inventory"
+    },
+    {
+      "source": "/api/generate-shopping-list", 
+      "destination": "/api/generate_shopping_list"
+    }
+  ]
+}
