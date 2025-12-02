@@ -40,7 +40,7 @@ class ImageToJSONTool(BaseTool):
         """Get or initialize configuration from environment."""
         if self._config is None:
             self._config = {
-                'max_tokens': int(os.getenv('MAX_TOKENS', '4096')),
+                'max_tokens': int(os.getenv('MAX_TOKENS', '8192')),  # Increased default
                 'temperature': float(os.getenv('TEMPERATURE', '0.1')),
                 'output_dir': os.getenv('OUTPUT_DIR', './outputs')
             }

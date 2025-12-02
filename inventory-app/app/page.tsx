@@ -13,13 +13,27 @@ interface InventoryItem {
   quantity: string
 }
 
+interface CurrentInventoryItem {
+  name: string
+  quantity: string
+  max: string
+  percentage: number
+}
+
 interface InventoryData {
   date: string
   items: InventoryItem[]
 }
 
 interface ShoppingListData {
-  items: InventoryItem[]
+  shopping_list: {
+    items: InventoryItem[]
+    total: number
+  }
+  current_inventory: {
+    items: CurrentInventoryItem[]
+    total: number
+  }
 }
 
 export default function InventoryApp() {
@@ -29,6 +43,7 @@ export default function InventoryApp() {
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set())
   const [isProcessingPhoto, setIsProcessingPhoto] = useState(false)
   const [isGeneratingList, setIsGeneratingList] = useState(false)
+  const [isResettingList, setIsResettingList] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [backendConnected, setBackendConnected] = useState<boolean | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -166,7 +181,7 @@ export default function InventoryApp() {
 
       if (isConnected) {
         console.log("[v0] Sending shopping list request to backend...")
-        const response = await fetch("http://localhost:8000/generate-shopping-list", {
+        const response = await fetch("http://localhost:8000/api/generate-shopping-list", {
           method: "POST",
           mode: "cors",
           headers: { "Content-Type": "application/json" },
@@ -192,22 +207,67 @@ export default function InventoryApp() {
 
       // Fallback to mock data if backend is not available
       const mockShoppingList: ShoppingListData = {
-        items: [
-          { name: "Milk", quantity: "2 gallons" },
-          { name: "Bread", quantity: "1 loaf" },
-          { name: "Eggs", quantity: "2 dozen" },
-          { name: "Ground Beef", quantity: "1 lb" },
-          { name: "Bell Peppers", quantity: "3 pieces" },
-          { name: "Spinach", quantity: "1 bag" },
-          { name: "Apples", quantity: "2 lbs" },
-          { name: "Cereal", quantity: "2 boxes" },
-          { name: "Orange Juice", quantity: "1 carton" },
-          { name: "Butter", quantity: "1 pack" },
-        ],
+        shopping_list: {
+          items: [
+            { name: "Milk", quantity: "2 gallons" },
+            { name: "Bread", quantity: "1 loaf" },
+            { name: "Eggs", quantity: "2 dozen" },
+            { name: "Ground Beef", quantity: "1 lb" },
+            { name: "Bell Peppers", quantity: "3 pieces" },
+            { name: "Spinach", quantity: "1 bag" },
+            { name: "Apples", quantity: "2 lbs" },
+            { name: "Cereal", quantity: "2 boxes" },
+            { name: "Orange Juice", quantity: "1 carton" },
+            { name: "Butter", quantity: "1 pack" },
+          ],
+          total: 10
+        },
+        current_inventory: {
+          items: [],
+          total: 0
+        }
       }
       setShoppingList(mockShoppingList)
     }
     setIsGeneratingList(false)
+  }
+
+  const resetGroceryList = async () => {
+    setError(null)
+    setIsResettingList(true)
+
+    try {
+      const isConnected = await checkBackendConnection()
+
+      if (isConnected) {
+        console.log("[v0] Resetting grocery list...")
+        const response = await fetch("http://localhost:8000/api/reset-grocery-list", {
+          method: "POST",
+          mode: "cors",
+        })
+
+        if (!response.ok) {
+          throw new Error(`Backend responded with status: ${response.status}`)
+        }
+
+        const data = await response.json()
+        console.log("[v0] Grocery list reset response:", data)
+
+        // Clear current inventory and shopping list
+        setInventoryData(null)
+        setShoppingList(null)
+        setCapturedImage(null)
+        setSelectedItems(new Set())
+
+        alert("Grocery list has been reset! You can now upload a new receipt.")
+      } else {
+        throw new Error("Backend not available")
+      }
+    } catch (error) {
+      console.error("[v0] Error resetting grocery list:", error)
+      setError("Failed to reset grocery list. Please make sure the backend is running.")
+    }
+    setIsResettingList(false)
   }
 
   return (
@@ -322,47 +382,111 @@ export default function InventoryApp() {
                 ))}
               </div>
 
-              <Button
-                onClick={generateShoppingList}
-                disabled={isGeneratingList}
-                className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white"
-              >
-                {isGeneratingList ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    Generating Shopping List...
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Create Shopping List
-                  </>
-                )}
-              </Button>
+              <div className="space-y-3 mt-6">
+                <Button
+                  onClick={generateShoppingList}
+                  disabled={isGeneratingList}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white"
+                >
+                  {isGeneratingList ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      Generating Shopping List...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-4 h-4 mr-2" />
+                      Create Shopping List
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={resetGroceryList}
+                  disabled={isResettingList}
+                  variant="outline"
+                  className="w-full border-red-300 text-red-700 hover:bg-red-50"
+                >
+                  {isResettingList ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      Resetting...
+                    </>
+                  ) : (
+                    <>
+                      Reset Grocery List
+                    </>
+                  )}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         )}
 
-        {/* Shopping List Results */}
-        {shoppingList && (
-          <Card className="border-2 border-purple-200 shadow-lg">
-            <CardHeader className="bg-purple-100">
-              <CardTitle className="flex items-center gap-2 text-purple-900">
-                <ShoppingCart className="w-5 h-5" />
-                Your Shopping List
+        {/* Current Inventory (Items You Have) */}
+        {shoppingList && shoppingList.current_inventory && shoppingList.current_inventory.items.length > 0 && (
+          <Card className="border-2 border-blue-200 shadow-lg">
+            <CardHeader className="bg-blue-100">
+              <CardTitle className="flex items-center gap-2 text-blue-900">
+                <Package className="w-5 h-5" />
+                Current Inventory ({shoppingList.current_inventory.total} items)
               </CardTitle>
             </CardHeader>
             <CardContent className="p-6">
               <div className="space-y-3">
-                {shoppingList.items.map((item, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                    <span className="font-medium text-purple-900">{item.name}</span>
-                    <span className="text-purple-700 bg-purple-200 px-2 py-1 rounded-full text-sm">
-                      {item.quantity}
-                    </span>
+                {shoppingList.current_inventory.items.map((item, index) => (
+                  <div key={index} className="p-3 bg-blue-50 rounded-lg">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-medium text-blue-900">{item.name}</span>
+                      <span className="text-blue-700 bg-blue-200 px-2 py-1 rounded-full text-sm">
+                        {item.quantity} / {item.max}
+                      </span>
+                    </div>
+                    <div className="w-full bg-blue-200 rounded-full h-2">
+                      <div
+                        className={`h-2 rounded-full ${
+                          item.percentage < 30
+                            ? "bg-red-500"
+                            : item.percentage < 60
+                              ? "bg-yellow-500"
+                              : "bg-green-500"
+                        }`}
+                        style={{ width: `${item.percentage}%` }}
+                      ></div>
+                    </div>
+                    <p className="text-xs text-blue-600 mt-1">{item.percentage}% of weekly max</p>
                   </div>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Shopping List (Items to Buy) */}
+        {shoppingList && shoppingList.shopping_list && (
+          <Card className="border-2 border-purple-200 shadow-lg">
+            <CardHeader className="bg-purple-100">
+              <CardTitle className="flex items-center gap-2 text-purple-900">
+                <ShoppingCart className="w-5 h-5" />
+                Shopping List ({shoppingList.shopping_list.total} items to buy)
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              {shoppingList.shopping_list.items.length > 0 ? (
+                <div className="space-y-3">
+                  {shoppingList.shopping_list.items.map((item, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                      <span className="font-medium text-purple-900">{item.name}</span>
+                      <span className="text-purple-700 bg-purple-200 px-2 py-1 rounded-full text-sm">
+                        {item.quantity}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-4 text-purple-600">
+                  🎉 You have everything you need for this week!
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

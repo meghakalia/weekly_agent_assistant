@@ -66,15 +66,51 @@ class InventoryCreatorTool(BaseTool):
             # Extract items from the image analysis
             # Handle nested json_data structure
             json_data = image_data.get("json_data", {})
+            
+            # Strategy 1: Try to parse from raw_response in metadata first
+            if "metadata" in image_data and "raw_response" in image_data["metadata"]:
+                raw_response = image_data["metadata"]["raw_response"]
+                if raw_response.startswith("```json"):
+                    raw_response = raw_response.replace("```json\n", "").replace("```", "").strip()
+                
+                try:
+                    parsed_json = json.loads(raw_response)
+                    if "text" in parsed_json and "items_purchased" in parsed_json["text"]:
+                        json_data = parsed_json
+                except json.JSONDecodeError:
+                    pass  # Try next strategy
+            
+            # Strategy 2: Try to parse from description or raw_response in json_data
+            for field in ["raw_response", "description"]:
+                if field in json_data and isinstance(json_data[field], str):
+                    content = json_data[field]
+                    # Remove markdown code block markers
+                    if content.startswith("```json"):
+                        content = content.replace("```json\n", "").replace("```", "").strip()
+                    
+                    try:
+                        parsed_json = json.loads(content)
+                        if "text" in parsed_json and "items_purchased" in parsed_json["text"]:
+                            json_data = parsed_json
+                            break
+                    except json.JSONDecodeError:
+                        continue  # Try next field
 
-            # Check if there's a nested json_data (from tool output)
+            # Strategy 3: Check if there's a nested json_data (from tool output)
             if "json_data" in json_data:
                 json_data = json_data.get("json_data", {})
 
+            # Extract the data we need
             text_data = json_data.get("text", {})
             items_purchased = text_data.get("items_purchased", [])
             totals = text_data.get("totals", {})
             transaction_details = text_data.get("transaction_details", {})
+            
+            # If still no items found, log the structure for debugging
+            if not items_purchased:
+                import sys
+                print(f"WARNING: No items found in inventory. JSON structure keys: {list(json_data.keys())}", file=sys.stderr)
+                print(f"text_data keys: {list(text_data.keys())}", file=sys.stderr)
             
             # Create inventory structure
             inventory = {
@@ -82,7 +118,7 @@ class InventoryCreatorTool(BaseTool):
                     "date": transaction_details.get("date", datetime.now().strftime("%Y-%m-%d")),
                     "items": [],
                     "total_items": len(items_purchased),
-                    "total_value": totals.get("total", 0.0),
+                    "total_value": totals.get("total_amount", totals.get("total", 0.0)),
                     "subtotal": totals.get("subtotal", 0.0),
                     "tax": totals.get("tax", 0.0)
                 }
@@ -90,8 +126,10 @@ class InventoryCreatorTool(BaseTool):
             
             # Process each item
             for item in items_purchased:
+                # Handle different field names: "item", "item_name", or "name"
+                item_name = item.get("item") or item.get("item_name") or item.get("name") or "Unknown Item"
                 inventory_item = {
-                    "item": item.get("item", item.get("item_name", "Unknown Item")),
+                    "item": item_name,
                     "quantity": item.get("quantity", 1),
                     "price": item.get("price", 0.0)
                 }
