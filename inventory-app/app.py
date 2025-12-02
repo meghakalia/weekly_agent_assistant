@@ -34,18 +34,23 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def transform_crewai_output_to_inventory(crew_result):
+def transform_crewai_output_to_inventory(_crew_result=None):
     """
     Transform CrewAI output to frontend-compatible inventory format.
 
-    Expected CrewAI format:
+    The CrewAI crew creates inventory.json in the outputs folder.
+    We read that file and transform it to the frontend format.
+
+    Args:
+        _crew_result: Crew execution result (unused, we read from file instead)
+
+    Expected inventory.json format:
     {
-      "success": true,
-      "json_data": {
-        "text": {
-          "items_purchased": [{"item": "...", "quantity": 1, "price": 0.00}],
-          "transaction_details": {"date": "..."}
-        }
+      "inventory": {
+        "date": "04/20/2016",
+        "items": [{"item": "...", "quantity": 1, "price": 23.99}],
+        "total_items": 9,
+        "total_value": 89.13
       }
     }
 
@@ -56,52 +61,69 @@ def transform_crewai_output_to_inventory(crew_result):
     }
     """
     try:
-        logger.info(f"Transforming CrewAI output: {crew_result}")
+        logger.info("Transforming CrewAI output from inventory.json")
 
-        # Handle different output formats from CrewAI
-        if isinstance(crew_result, str):
-            # Try to parse as JSON
-            try:
-                crew_result = json.loads(crew_result)
-            except json.JSONDecodeError:
-                logger.error("Failed to parse CrewAI output as JSON")
-                return None
+        # The crew creates files in the outputs directory
+        # Read the latest inventory file
+        import glob
+        output_dir = os.getenv('OUTPUT_DIR', './outputs')
 
-        # Extract items from the nested structure
+        # Try to find inventory.json first
+        inventory_path = os.path.join(output_dir, 'inventory.json')
+        inventory_data = None
+
+        if os.path.exists(inventory_path):
+            logger.info(f"Reading inventory from {inventory_path}")
+            with open(inventory_path, 'r') as f:
+                inventory_data = json.load(f)
+        else:
+            # Try to find inventory_*.json files
+            inventory_files = glob.glob(os.path.join(output_dir, 'inventory_*.json'))
+            if inventory_files:
+                latest_file = max(inventory_files, key=os.path.getctime)
+                logger.info(f"Reading inventory from {latest_file}")
+                with open(latest_file, 'r') as f:
+                    inventory_data = json.load(f)
+
+        if not inventory_data:
+            logger.error("No inventory file found")
+            return None
+
+        # Extract inventory data
+        inventory = inventory_data.get('inventory', {})
+        inventory_items = inventory.get('items', [])
+        inventory_date = inventory.get('date', datetime.now().strftime("%Y-%m-%d"))
+
+        # Transform items to frontend format
         items = []
-        date = datetime.now().strftime("%Y-%m-%d")
+        for item_data in inventory_items:
+            if isinstance(item_data, dict):
+                item_name = item_data.get('item', 'Unknown')
+                quantity = item_data.get('quantity', 1)
+                price = item_data.get('price', 0.00)
 
-        # Try to extract from json_data structure
-        if isinstance(crew_result, dict):
-            json_data = crew_result.get('json_data', crew_result)
-
-            # Extract date
-            if 'text' in json_data and 'transaction_details' in json_data['text']:
-                transaction_date = json_data['text']['transaction_details'].get('date', '')
-                if transaction_date:
-                    date = transaction_date
-
-            # Extract items
-            if 'text' in json_data and 'items_purchased' in json_data['text']:
-                items_purchased = json_data['text']['items_purchased']
-                for item in items_purchased:
-                    if isinstance(item, dict):
-                        items.append({
-                            "name": item.get('item', 'Unknown'),
-                            "quantity": f"{item.get('quantity', 1)} @ ${item.get('price', 0.00)}",
-                            "unit": "unit",
-                            "category": "grocery",
-                            "price": item.get('price', 0.00)
-                        })
+                items.append({
+                    "name": item_name,
+                    "quantity": f"{quantity} @ ${price:.2f}",
+                    "unit": "unit",
+                    "category": "grocery",
+                    "price": price
+                })
 
         # If no items found, return None
         if not items:
-            logger.warning("No items found in CrewAI output")
+            logger.warning("No items found in inventory")
             return None
 
+        logger.info(f"Successfully transformed {len(items)} items")
+
         return {
-            "date": date,
-            "items": items
+            "date": inventory_date,
+            "items": items,
+            "total_items": inventory.get('total_items', len(items)),
+            "total_value": inventory.get('total_value', 0.00),
+            "subtotal": inventory.get('subtotal', 0.00),
+            "tax": inventory.get('tax', 0.00)
         }
 
     except Exception as e:
