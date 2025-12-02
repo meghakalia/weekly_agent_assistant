@@ -9,26 +9,44 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No image provided" }, { status: 400 })
     }
 
-    // Convert image to buffer for processing
-    const bytes = await image.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    // Get backend URL from environment variable
+    const backendUrl = process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_BACKEND_API_URL
 
-    // TODO: Send image to your AI/ML backend service
-    // Example: Send to OpenAI Vision API, Google Vision API, or custom ML model
-
-    // Mock response - replace with actual backend processing
-    const mockResponse = {
-      date: new Date().toISOString().split("T")[0],
-      items: [
-        { name: "Toothpaste", quantity: "2 cartons" },
-        { name: "Paper Towels", quantity: "1 carton" },
-        { name: "Rice", quantity: "5 kg" },
-      ],
+    if (!backendUrl) {
+      console.error("BACKEND_API_URL not configured")
+      // Return mock data if backend not configured
+      const mockResponse = {
+        date: new Date().toISOString().split("T")[0],
+        items: [
+          { name: "Backend Not Configured", quantity: "Please set BACKEND_API_URL" },
+        ],
+      }
+      return NextResponse.json(mockResponse)
     }
 
-    return NextResponse.json(mockResponse)
+    // Forward the request to your Flask backend
+    const backendFormData = new FormData()
+    backendFormData.append("image", image)
+
+    const response = await fetch(`${backendUrl}/process-inventory`, {
+      method: "POST",
+      body: backendFormData,
+    })
+
+    if (!response.ok) {
+      throw new Error(`Backend returned ${response.status}`)
+    }
+
+    const data = await response.json()
+    return NextResponse.json(data)
+
   } catch (error) {
     console.error("Error processing inventory:", error)
-    return NextResponse.json({ error: "Failed to process inventory" }, { status: 500 })
+    return NextResponse.json({ 
+      error: "Failed to process inventory", 
+      details: error instanceof Error ? error.message : "Unknown error"
+    }, { status: 500 })
   }
 }
+
+export const runtime = 'edge'

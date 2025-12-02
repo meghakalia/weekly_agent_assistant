@@ -10,7 +10,7 @@ import os
 import logging
 
 import sys
-sys.path.append("/Users/megha/Documents/repos/weekly_grocery_agent/src")
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from smart_shop.crew import SmartShop
 import google.generativeai as genai
@@ -25,8 +25,8 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Enable CORS for frontend connection
-CORS(app, origins=["http://localhost:3000", "https://your-frontend-domain.com"])
+# Enable CORS for all origins (update with your Vercel domain for production)
+CORS(app, origins=["*"])  # Allow all origins for now
 
 # Configure upload settings
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size

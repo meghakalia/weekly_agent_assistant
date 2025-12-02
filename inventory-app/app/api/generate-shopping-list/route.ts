@@ -2,29 +2,52 @@ import { type NextRequest, NextResponse } from "next/server"
 
 export async function POST(request: NextRequest) {
   try {
-    const { selectedItems } = await request.json()
+    const body = await request.json()
 
-    if (!selectedItems || !Array.isArray(selectedItems)) {
-      return NextResponse.json({ error: "Invalid selected items" }, { status: 400 })
+    // Get backend URL from environment variable
+    const backendUrl = process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_BACKEND_API_URL
+
+    if (!backendUrl) {
+      console.error("BACKEND_API_URL not configured")
+      // Return mock data if backend not configured
+      const mockShoppingList = {
+        shopping_list: {
+          items: [
+            { name: "Backend Not Configured", quantity: "Please set BACKEND_API_URL" },
+          ],
+          total: 1
+        },
+        current_inventory: {
+          items: [],
+          total: 0
+        }
+      }
+      return NextResponse.json(mockShoppingList)
     }
 
-    // TODO: Send selected items to your backend service for shopping list generation
-    // This could involve AI analysis of what's needed based on current inventory
+    // Forward the request to your Flask backend
+    const response = await fetch(`${backendUrl}/api/generate-shopping-list`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
 
-    // Mock response - replace with actual backend processing
-    const mockShoppingList = {
-      items: [
-        { name: "Rice", quantity: "5 kg" },
-        { name: "Pasta", quantity: "2 packs" },
-        { name: "Olive Oil", quantity: "1 bottle" },
-        { name: "Tomato Sauce", quantity: "3 cans" },
-        { name: "Bread", quantity: "1 loaf" },
-      ],
+    if (!response.ok) {
+      throw new Error(`Backend returned ${response.status}`)
     }
 
-    return NextResponse.json(mockShoppingList)
+    const data = await response.json()
+    return NextResponse.json(data)
+
   } catch (error) {
     console.error("Error generating shopping list:", error)
-    return NextResponse.json({ error: "Failed to generate shopping list" }, { status: 500 })
+    return NextResponse.json({ 
+      error: "Failed to generate shopping list",
+      details: error instanceof Error ? error.message : "Unknown error"
+    }, { status: 500 })
   }
 }
+
+export const runtime = 'edge'
