@@ -26,7 +26,7 @@ class SmartShop():
 
     def _validate_environment(self):
         """Validate that required environment variables are set."""
-        required_vars = ['GOOGLE_AI_API_KEY']
+        required_vars = ['GEMINI_API_KEY']
         missing_vars = []
         
         for var in required_vars:
@@ -43,8 +43,8 @@ class SmartShop():
     def _get_llm(self):
         """Configure LLM to use Google's Gemini model."""
         return LLM(
-            model="gemini/gemini-1.5-flash",
-            api_key=os.getenv('GOOGLE_AI_API_KEY'),
+            model="gemini/gemini-2.5-flash",
+            api_key=os.getenv('GEMINI_API_KEY'),
             temperature=0.1
         )
 

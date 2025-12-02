@@ -92,19 +92,23 @@ export default function InventoryApp() {
                   body: formData,
                 })
 
-                if (!response.ok) {
-                  throw new Error(`Backend responded with status: ${response.status}`)
-                }
-
                 const data = await response.json()
                 console.log("[v0] Backend response received:", data)
+
+                if (!response.ok) {
+                  // Backend returned an error
+                  const errorMsg = data.error || data.error_details || `Server error: ${response.status}`
+                  throw new Error(errorMsg)
+                }
+
                 setInventoryData(data)
               } else {
                 throw new Error("Backend not available")
               }
             } catch (error) {
-              console.log("[v0] Using mock data due to backend error:", error)
-              setError("Backend not available - using demo data. Please start the Python backend on localhost:8000")
+              console.error("[v0] Backend error:", error)
+              const errorMessage = error instanceof Error ? error.message : String(error)
+              setError(`Backend error: ${errorMessage} - Using demo data instead`)
 
               // Fallback to mock data if backend is not available
               const mockInventoryData: InventoryData = {

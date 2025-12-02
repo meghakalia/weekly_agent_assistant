@@ -24,7 +24,7 @@ class ImageToJSONToolInput(BaseModel):
 class ImageToJSONTool(BaseTool):
     name: str = "image_to_json_converter"
     description: str = (
-        "Converts images to structured JSON format using Google's Gemini Flash 1.5 model. "
+        "Converts images to structured JSON format using Google's Gemini 2.5 Flash model. "
         "Analyzes images and extracts text, objects, colors, and other visual elements into a structured JSON format. "
         "Useful for processing receipts, documents, photos, and any visual content that needs to be converted to structured data."
     )
@@ -60,7 +60,7 @@ class ImageToJSONTool(BaseTool):
                 )
             
             genai.configure(api_key=api_key)
-            self._model = genai.GenerativeModel('gemini-1.5-flash')
+            self._model = genai.GenerativeModel('gemini-2.5-flash')
         
         return self._model
 
@@ -95,13 +95,13 @@ class ImageToJSONTool(BaseTool):
 
     def _run(self, image_path: str, custom_prompt: Optional[str] = None, output_path: Optional[str] = None) -> str:
         """
-        Convert image to JSON using Gemini Flash 1.5.
-        
+        Convert image to JSON using Gemini 2.5 Flash.
+
         Args:
             image_path: Path to the image file
             custom_prompt: Custom prompt for the conversion (optional)
             output_path: Output path for the JSON file (optional)
-            
+
         Returns:
             String containing the result of the conversion
         """
@@ -224,7 +224,7 @@ class ImageToJSONTool(BaseTool):
                 "metadata": {
                     "image_path": image_path,
                     "image_size": image.size,
-                    "model": "gemini-1.5-flash",
+                    "model": "gemini-2.5-flash",
                     "tokens_used": len(response_text.split()),
                     "raw_response": response_text
                 }
@@ -260,7 +260,7 @@ class ImageToJSONTool(BaseTool):
                 "error": str(e),
                 "metadata": {
                     "image_path": image_path,
-                    "model": "gemini-1.5-flash"
+                    "model": "gemini-2.5-flash"
                 }
             }
             return json.dumps(error_result, indent=2)

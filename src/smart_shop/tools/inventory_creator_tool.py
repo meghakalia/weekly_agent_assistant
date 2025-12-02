@@ -64,7 +64,13 @@ class InventoryCreatorTool(BaseTool):
                 }, indent=2)
             
             # Extract items from the image analysis
+            # Handle nested json_data structure
             json_data = image_data.get("json_data", {})
+
+            # Check if there's a nested json_data (from tool output)
+            if "json_data" in json_data:
+                json_data = json_data.get("json_data", {})
+
             text_data = json_data.get("text", {})
             items_purchased = text_data.get("items_purchased", [])
             totals = text_data.get("totals", {})
