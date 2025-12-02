@@ -1,1 +1,1 @@
-web: python inventory-app/app.py
+web: cd inventory-app && python app.py
