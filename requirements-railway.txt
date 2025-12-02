@@ -1,22 +1,19 @@
 # Core dependencies
-Pillow==10.1.0
-python-dotenv==1.0.0
+Pillow>=10.1.0
+python-dotenv>=1.0.0
 
 # AI/ML dependencies
-google-generativeai==0.8.5
-crewai==0.193.2
+google-generativeai>=0.8.5
+crewai>=0.193.2
 
-# CrewAI dependencies
-langchain==0.3.21
-langchain-google-genai==2.0.8
-langchain-openai==0.2.14
-langchain-community==0.3.21
-
-# Additional dependencies
-pydantic==2.5.0
-requests==2.31.0
+# CrewAI dependencies - let pip resolve compatible versions
+langchain
+langchain-google-genai
+langchain-openai
+langchain-community
 
 # Web server
-Flask==3.0.0
-Flask-CORS==4.0.0
-gunicorn==21.2.0
+Flask>=3.0.0
+Flask-CORS>=4.0.0
+gunicorn>=21.2.0
+requests

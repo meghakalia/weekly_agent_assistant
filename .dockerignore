@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env_grocery_agent/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Node
+node_modules/
+.next/
+inventory-app/
+
+# Testing
+test_*.py
+test_*.html
+*.test.js
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+*.tmp
+image_analysis_*.json
+inventory_2025*.json
+
+# Documentation
+*.md
+!README.md
+
+# Scripts
+*.sh
+!start.sh
+
+# Vercel
+vercel.json
+.vercel/
+
+# Railway (keep the important ones)
+!railway.toml
+!Dockerfile
