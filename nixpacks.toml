@@ -1,14 +1,17 @@
 [phases.setup]
-nixPkgs = ["python311", "gcc"]
+nixPkgs = ["python311", "gcc", "libffi", "openssl"]
 
 [phases.install]
 cmds = [
-    "pip install --upgrade pip",
+    "pip install --upgrade pip setuptools wheel",
     "pip install -r requirements-railway.txt"
 ]
 
 [phases.build]
-cmds = ["echo 'Build phase complete'"]
+cmds = [
+    "python --version",
+    "pip list"
+]
 
 [start]
-cmd = "gunicorn backend.main:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1"
+cmd = "gunicorn backend.main:app --bind 0.0.0.0:$PORT --timeout 300 --workers 1 --log-level info"

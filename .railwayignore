@@ -1,0 +1,16 @@
+*.pyc
+__pycache__/
+*.log
+.DS_Store
+.env
+.env.local
+env_grocery_agent/
+venv/
+node_modules/
+.next/
+inventory-app/
+test_*.py
+test_*.html
+image_analysis_*.json
+inventory_2025*.json
+*.sh
