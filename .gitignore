@@ -1,8 +1,42 @@
-<<<<<<< HEAD
-.env
+# Python
 __pycache__/
-.DS_Store
-=======
-/env_grocery_agent
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env_grocery_agent/
+
+# Environment variables
 .env
->>>>>>> b7c255a151dbec0b83e71c636ef2143a9a56227e
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vercel
+.vercel
+.vercel.json.backup
+
+# Outputs
+outputs/
+uploads/
+*.log
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node modules (for frontend)
+node_modules/
+
+# Build outputs
+dist/
+build/
+.next/

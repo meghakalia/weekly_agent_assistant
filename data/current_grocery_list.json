@@ -1,0 +1,275 @@
+{
+  "version": "1.0",
+  "description": "Default weekly grocery list template with maximum quantities per week",
+  "last_updated": "2025-12-01T22:38:53.899918",
+  "categories": {
+    "produce": {
+      "bananas": {
+        "quantity": 0,
+        "max_per_week": 6,
+        "unit": "pieces"
+      },
+      "apples": {
+        "quantity": 0,
+        "max_per_week": 8,
+        "unit": "pieces"
+      },
+      "oranges": {
+        "quantity": 0,
+        "max_per_week": 6,
+        "unit": "pieces"
+      },
+      "tomatoes": {
+        "quantity": 4,
+        "max_per_week": 5,
+        "unit": "lbs"
+      },
+      "onions": {
+        "quantity": 1,
+        "max_per_week": 3,
+        "unit": "lbs"
+      },
+      "garlic": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "bulbs"
+      },
+      "bell_peppers": {
+        "quantity": 0,
+        "max_per_week": 4,
+        "unit": "pieces"
+      },
+      "lettuce": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "heads"
+      },
+      "spinach": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "bags"
+      },
+      "carrots": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "lbs"
+      },
+      "potatoes": {
+        "quantity": 0,
+        "max_per_week": 5,
+        "unit": "lbs"
+      }
+    },
+    "meat_poultry": {
+      "chicken_breast": {
+        "quantity": 4,
+        "max_per_week": 4,
+        "unit": "lbs"
+      },
+      "ground_beef": {
+        "quantity": 0,
+        "max_per_week": 3,
+        "unit": "lbs"
+      },
+      "ground_turkey": {
+        "quantity": 1,
+        "max_per_week": 3,
+        "unit": "lbs"
+      },
+      "pork_chops": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "lbs"
+      },
+      "bacon": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "pack"
+      },
+      "sausage": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "lbs"
+      }
+    },
+    "dairy_eggs": {
+      "milk": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "gallons"
+      },
+      "eggs": {
+        "quantity": 27,
+        "max_per_week": 24,
+        "unit": "count"
+      },
+      "cheese": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "lbs"
+      },
+      "butter": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "lb"
+      },
+      "yogurt": {
+        "quantity": 0,
+        "max_per_week": 12,
+        "unit": "cups"
+      },
+      "cream_cheese": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "pack"
+      },
+      "sour_cream": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "container"
+      }
+    },
+    "pantry": {
+      "rice": {
+        "quantity": 0,
+        "max_per_week": 5,
+        "unit": "lbs"
+      },
+      "pasta": {
+        "quantity": 0,
+        "max_per_week": 3,
+        "unit": "boxes"
+      },
+      "bread": {
+        "quantity": 0,
+        "max_per_week": 3,
+        "unit": "loaves"
+      },
+      "cereal": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "boxes"
+      },
+      "flour": {
+        "quantity": 0,
+        "max_per_week": 5,
+        "unit": "lbs"
+      },
+      "sugar": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "lbs"
+      },
+      "cooking_oil": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "bottle"
+      },
+      "olive_oil": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "bottle"
+      },
+      "salt": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "container"
+      },
+      "black_pepper": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "container"
+      },
+      "canned_tomatoes": {
+        "quantity": 2,
+        "max_per_week": 4,
+        "unit": "cans"
+      },
+      "beans": {
+        "quantity": 0,
+        "max_per_week": 4,
+        "unit": "cans"
+      },
+      "coffee": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "bag"
+      },
+      "tea": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "box"
+      }
+    },
+    "frozen": {
+      "frozen_vegetables": {
+        "quantity": 0,
+        "max_per_week": 3,
+        "unit": "bags"
+      },
+      "frozen_fruit": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "bags"
+      },
+      "ice_cream": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "container"
+      }
+    },
+    "beverages": {
+      "orange_juice": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "carton"
+      },
+      "soda": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "12-pack"
+      },
+      "water_bottles": {
+        "quantity": 0,
+        "max_per_week": 2,
+        "unit": "24-pack"
+      }
+    },
+    "household": {
+      "paper_towels": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "pack"
+      },
+      "toilet_paper": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "pack"
+      },
+      "dish_soap": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "bottle"
+      },
+      "laundry_detergent": {
+        "quantity": 0,
+        "max_per_week": 1,
+        "unit": "bottle"
+      }
+    },
+    "custom": {
+      "jackorgsalsa": {
+        "quantity": 2,
+        "max_per_week": 2,
+        "unit": "unit",
+        "original_name": "JACKORGSALSA"
+      },
+      "eco_half_pan": {
+        "quantity": 1,
+        "max_per_week": 2,
+        "unit": "unit",
+        "original_name": "ECO HALF PAN"
+      }
+    }
+  }
+}
