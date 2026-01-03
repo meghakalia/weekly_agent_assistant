@@ -13,7 +13,7 @@ services:
       - key: PORT
         value: 8080
       - key: OUTPUT_DIR
-        value: /tmp/outputs
+        value: /tmp
       - key: PYTHONUNBUFFERED
         value: 1
       # Add your API keys in Render Dashboard

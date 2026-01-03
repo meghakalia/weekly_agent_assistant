@@ -16,6 +16,12 @@ import time
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src'))
 
+# Ensure OUTPUT_DIR is set and exists (important for Vercel)
+output_dir = os.getenv('OUTPUT_DIR', './outputs')
+os.makedirs(output_dir, exist_ok=True)
+logger = logging.getLogger(__name__)
+logger.info(f"Output directory set to: {output_dir}")
+
 # Ensure both API key environment variables are set
 # Some tools check GOOGLE_AI_API_KEY, others check GEMINI_API_KEY
 gemini_key = os.getenv('GEMINI_API_KEY') or os.getenv('GOOGLE_AI_API_KEY')
@@ -60,33 +66,57 @@ def transform_crewai_output_to_inventory(_crew_result=None):
     try:
         logger.info("Transforming CrewAI output from inventory.json")
         
-        # Read from outputs directory
-        output_dir = os.getenv('OUTPUT_DIR', './outputs')
+        # Check multiple possible output directories (Vercel uses /tmp)
+        possible_dirs = [
+            os.getenv('OUTPUT_DIR', './outputs'),
+            './outputs',
+            '/tmp',
+            os.getcwd()  # Current working directory
+        ]
         
-        inventory_path = os.path.join(output_dir, 'inventory.json')
         inventory_data = None
+        inventory_files = []
         
-        if os.path.exists(inventory_path):
-            logger.info(f"Reading inventory from {inventory_path}")
-            with open(inventory_path, 'r') as f:
-                inventory_data = json.load(f)
-        else:
-            # Try to find inventory_*.json files
-            inventory_files = glob.glob(os.path.join(output_dir, 'inventory_*.json'))
-            if inventory_files:
-                latest_file = max(inventory_files, key=os.path.getctime)
-                logger.info(f"Reading inventory from {latest_file}")
-                with open(latest_file, 'r') as f:
+        # Search all possible directories
+        for output_dir in possible_dirs:
+            if not os.path.exists(output_dir):
+                continue
+                
+            logger.info(f"Checking directory: {output_dir}")
+            
+            # First try inventory.json
+            inventory_path = os.path.join(output_dir, 'inventory.json')
+            if os.path.exists(inventory_path):
+                logger.info(f"Reading inventory from {inventory_path}")
+                with open(inventory_path, 'r') as f:
                     inventory_data = json.load(f)
+                break
+            
+            # Then try inventory_*.json files
+            found_files = glob.glob(os.path.join(output_dir, 'inventory_*.json'))
+            if found_files:
+                inventory_files.extend(found_files)
+        
+        # If we found timestamped files, use the latest one
+        if not inventory_data and inventory_files:
+            latest_file = max(inventory_files, key=os.path.getctime)
+            logger.info(f"Reading inventory from {latest_file}")
+            with open(latest_file, 'r') as f:
+                inventory_data = json.load(f)
         
         if not inventory_data:
-            logger.error("No inventory file found")
+            logger.error("No inventory file found in any directory")
+            logger.error(f"Searched directories: {possible_dirs}")
             return None
         
         # Extract inventory data
         inventory = inventory_data.get('inventory', {})
         inventory_items = inventory.get('items', [])
         inventory_date = inventory.get('date', datetime.now().strftime("%Y-%m-%d"))
+        
+        logger.info(f"Inventory data structure: {list(inventory_data.keys())}")
+        logger.info(f"Inventory items count: {len(inventory_items)}")
+        logger.info(f"First item sample: {inventory_items[0] if inventory_items else 'NO ITEMS'}")
         
         # Transform items to frontend format
         items = []

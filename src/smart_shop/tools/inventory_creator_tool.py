@@ -26,19 +26,22 @@ class InventoryCreatorTool(BaseTool):
     
     def _run(
         self, 
-        output_dir: str = "./outputs",
+        output_dir: str = None,
         inventory_filename: Optional[str] = None
     ) -> str:
         """
         Create inventory from the latest image analysis file.
         
         Args:
-            output_dir: Directory containing image analysis files
+            output_dir: Directory containing image analysis files (defaults to OUTPUT_DIR env or ./outputs)
             inventory_filename: Optional custom filename for inventory
             
         Returns:
             JSON string with inventory data
         """
+        # Use environment variable if output_dir not provided
+        if output_dir is None:
+            output_dir = os.getenv('OUTPUT_DIR', './outputs')
         try:
             # Find the latest image_analysis_*.json file
             pattern = os.path.join(output_dir, "image_analysis_*.json")
