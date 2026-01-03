@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Camera, ShoppingCart, Loader2, Package, AlertCircle } from "lucide-react"
+import { getApiUrl } from "@/lib/api-config"
 
 interface InventoryItem {
   name: string
@@ -50,7 +51,7 @@ export default function InventoryApp() {
 
   const checkBackendConnection = async () => {
     try {
-      const response = await fetch("http://localhost:8000/health", {
+      const response = await fetch(getApiUrl('health'), {
         method: "GET",
         mode: "cors",
       })
@@ -101,7 +102,7 @@ export default function InventoryApp() {
             try {
               if (isConnected) {
                 console.log("[v0] Attempting to call backend...")
-                const response = await fetch("http://localhost:8000/process-inventory", {
+                const response = await fetch(getApiUrl('processInventory'), {
                   method: "POST",
                   mode: "cors",
                   body: formData,
@@ -181,7 +182,7 @@ export default function InventoryApp() {
 
       if (isConnected) {
         console.log("[v0] Sending shopping list request to backend...")
-        const response = await fetch("http://localhost:8000/api/generate-shopping-list", {
+        const response = await fetch(getApiUrl('generateShoppingList'), {
           method: "POST",
           mode: "cors",
           headers: { "Content-Type": "application/json" },
@@ -203,7 +204,7 @@ export default function InventoryApp() {
       }
     } catch (error) {
       console.log("[v0] Using mock shopping list due to backend error:", error)
-      setError("Backend not available - using demo shopping list. Please start the Python backend on localhost:8000")
+      setError("Backend not available - using demo shopping list. Please check your backend connection.")
 
       // Fallback to mock data if backend is not available
       const mockShoppingList: ShoppingListData = {
@@ -241,7 +242,7 @@ export default function InventoryApp() {
 
       if (isConnected) {
         console.log("[v0] Resetting grocery list...")
-        const response = await fetch("http://localhost:8000/api/reset-grocery-list", {
+        const response = await fetch(getApiUrl('resetGroceryList'), {
           method: "POST",
           mode: "cors",
         })
