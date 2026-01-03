@@ -11,9 +11,19 @@ from PIL import Image
 from datetime import datetime
 import logging
 import glob
+import time
 
 # Add src to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src'))
+
+# Ensure both API key environment variables are set
+# Some tools check GOOGLE_AI_API_KEY, others check GEMINI_API_KEY
+gemini_key = os.getenv('GEMINI_API_KEY') or os.getenv('GOOGLE_AI_API_KEY')
+if gemini_key:
+    if not os.getenv('GEMINI_API_KEY'):
+        os.environ['GEMINI_API_KEY'] = gemini_key
+    if not os.getenv('GOOGLE_AI_API_KEY'):
+        os.environ['GOOGLE_AI_API_KEY'] = gemini_key
 
 try:
     from smart_shop.crew import SmartShop
@@ -24,6 +34,16 @@ except ImportError as e:
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Log API key status (without exposing the full key)
+gemini_key_status = "SET" if os.getenv('GEMINI_API_KEY') else "NOT SET"
+google_key_status = "SET" if os.getenv('GOOGLE_AI_API_KEY') else "NOT SET"
+logger.info(f"API Key Status - GEMINI_API_KEY: {gemini_key_status}, GOOGLE_AI_API_KEY: {google_key_status}")
+
+if gemini_key_status == "SET":
+    key = os.getenv('GEMINI_API_KEY')
+    logger.info(f"GEMINI_API_KEY present: {key[:20]}...{key[-4:] if len(key) > 24 else ''}")
+
 
 app = Flask(__name__)
 CORS(app)
@@ -168,15 +188,43 @@ def process_inventory():
         image.save(image_path, 'JPEG', quality=95)
         logger.info(f"Saved image to: {image_path}")
         
-        # Process with CrewAI
+        # Process with CrewAI with retry logic
         try:
             logger.info("Initializing CrewAI system...")
-            crew_instance = SmartShop()
+            logger.info(f"API Keys available: GEMINI={bool(os.getenv('GEMINI_API_KEY'))}, GOOGLE={bool(os.getenv('GOOGLE_AI_API_KEY'))}")
             
-            logger.info(f"Starting CrewAI processing for image: {image_path}")
-            result = crew_instance.crew().kickoff(inputs={'image_path': image_path})
+            # Retry logic for rate limiting
+            max_retries = 3
+            retry_delay = 20  # Start with 20 seconds as suggested by error
+            result = None
             
-            logger.info(f"CrewAI processing complete")
+            for attempt in range(max_retries):
+                try:
+                    crew_instance = SmartShop()
+                    
+                    logger.info(f"Starting CrewAI processing (attempt {attempt + 1}/{max_retries}) for image: {image_path}")
+                    result = crew_instance.crew().kickoff(inputs={'image_path': image_path})
+                    
+                    logger.info(f"CrewAI processing complete. Result type: {type(result)}")
+                    logger.info(f"CrewAI result preview: {str(result)[:200]}...")
+                    break  # Success, exit retry loop
+                    
+                except Exception as crew_error:
+                    error_msg = str(crew_error)
+                    
+                    # Check if it's a rate limit error
+                    if 'RateLimitError' in error_msg or '429' in error_msg or 'RESOURCE_EXHAUSTED' in error_msg:
+                        if attempt < max_retries - 1:
+                            logger.warning(f"Rate limit hit. Waiting {retry_delay}s before retry {attempt + 2}/{max_retries}...")
+                            time.sleep(retry_delay)
+                            retry_delay *= 1.5  # Exponential backoff
+                            continue
+                        else:
+                            logger.error("Rate limit exceeded after all retries")
+                            raise Exception("Gemini API rate limit exceeded. Please wait a minute and try again.")
+                    else:
+                        # Not a rate limit error, raise immediately
+                        raise
             
             # Transform output
             inventory_result = transform_crewai_output_to_inventory(result)
@@ -204,6 +252,19 @@ def process_inventory():
             
         except Exception as e:
             logger.error(f"CrewAI processing error: {str(e)}", exc_info=True)
+            logger.error(f"Error type: {type(e).__name__}")
+            logger.error(f"Error details: {repr(e)}")
+            
+            # Check if it's a rate limit issue
+            is_rate_limit = 'RateLimitError' in str(e) or '429' in str(e) or 'RESOURCE_EXHAUSTED' in str(e)
+            
+            # Check if it's an API key issue
+            is_api_key_issue = 'api' in str(e).lower() or 'key' in str(e).lower() or 'auth' in str(e).lower()
+            
+            if is_api_key_issue:
+                logger.error("This appears to be an API key related error!")
+                logger.error(f"GEMINI_API_KEY set: {bool(os.getenv('GEMINI_API_KEY'))}")
+                logger.error(f"GOOGLE_AI_API_KEY set: {bool(os.getenv('GOOGLE_AI_API_KEY'))}")
             
             # Cleanup on error
             try:
@@ -212,11 +273,21 @@ def process_inventory():
             except:
                 pass
             
+            # User-friendly error message
+            if is_rate_limit:
+                error_msg = "Gemini API rate limit exceeded (free tier: 5 requests/minute). Please wait 1-2 minutes and try again."
+            elif is_api_key_issue:
+                error_msg = "API authentication error. Please check your Gemini API key configuration."
+            else:
+                error_msg = f"Error processing image: {str(e)}"
+            
             return jsonify({
-                "error": f"Error processing image: {str(e)}",
+                "error": error_msg,
+                "error_type": type(e).__name__,
                 "date": datetime.now().strftime("%Y-%m-%d"),
-                "items": []
-            }), 500
+                "items": [],
+                "retry_after": 60 if is_rate_limit else None
+            }), 503 if is_rate_limit else 500
     
     except Exception as e:
         logger.error(f"Error in handler: {str(e)}", exc_info=True)
