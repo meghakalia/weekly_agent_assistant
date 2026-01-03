@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "description": "Default weekly grocery list template with maximum quantities per week",
-  "last_updated": "2025-12-01T22:38:53.899918",
+  "last_updated": "2026-01-02T19:42:47.582813",
   "categories": {
     "produce": {
       "bananas": {
@@ -62,7 +62,7 @@
     },
     "meat_poultry": {
       "chicken_breast": {
-        "quantity": 4,
+        "quantity": 5,
         "max_per_week": 4,
         "unit": "lbs"
       },
@@ -99,7 +99,7 @@
         "unit": "gallons"
       },
       "eggs": {
-        "quantity": 27,
+        "quantity": 28,
         "max_per_week": 24,
         "unit": "count"
       },
@@ -181,7 +181,7 @@
         "unit": "container"
       },
       "canned_tomatoes": {
-        "quantity": 2,
+        "quantity": 3,
         "max_per_week": 4,
         "unit": "cans"
       },
