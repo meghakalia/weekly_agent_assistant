@@ -224,8 +224,8 @@ def process_inventory():
             logger.info(f"API Keys available: GEMINI={bool(os.getenv('GEMINI_API_KEY'))}, GOOGLE={bool(os.getenv('GOOGLE_AI_API_KEY'))}")
             
             # Retry logic for rate limiting
-            max_retries = 3
-            retry_delay = 20  # Start with 20 seconds as suggested by error
+            max_retries = 2  # Reduced retries to avoid long waits
+            retry_delay = 60  # Start with 60 seconds for rate limit
             result = None
             
             for attempt in range(max_retries):
@@ -242,16 +242,21 @@ def process_inventory():
                 except Exception as crew_error:
                     error_msg = str(crew_error)
                     
-                    # Check if it's a rate limit error
-                    if 'RateLimitError' in error_msg or '429' in error_msg or 'RESOURCE_EXHAUSTED' in error_msg:
+                    # Check if it's a rate limit error (including VertexAI and litellm errors)
+                    is_rate_limit = any(err in error_msg for err in [
+                        'RateLimitError', '429', 'RESOURCE_EXHAUSTED', 
+                        'VertexAIException', 'rate limit', 'quota'
+                    ])
+                    
+                    if is_rate_limit:
                         if attempt < max_retries - 1:
-                            logger.warning(f"Rate limit hit. Waiting {retry_delay}s before retry {attempt + 2}/{max_retries}...")
-                            time.sleep(retry_delay)
-                            retry_delay *= 1.5  # Exponential backoff
+                            wait_time = retry_delay if attempt == 0 else retry_delay * 2
+                            logger.warning(f"⏱️  Rate limit hit. Waiting {wait_time}s before retry {attempt + 2}/{max_retries}...")
+                            time.sleep(wait_time)
                             continue
                         else:
                             logger.error("Rate limit exceeded after all retries")
-                            raise Exception("Gemini API rate limit exceeded. Please wait a minute and try again.")
+                            raise Exception("⚠️ Gemini API rate limit (Free tier: 5 requests/min). Please wait 60-90 seconds and try again.")
                     else:
                         # Not a rate limit error, raise immediately
                         raise
@@ -305,7 +310,7 @@ def process_inventory():
             
             # User-friendly error message
             if is_rate_limit:
-                error_msg = "Gemini API rate limit exceeded (free tier: 5 requests/minute). Please wait 1-2 minutes and try again."
+                error_msg = "⚠️ Rate Limit Reached: Gemini free tier allows 5 requests/minute. Please wait 60-90 seconds before uploading another receipt."
             elif is_api_key_issue:
                 error_msg = "API authentication error. Please check your Gemini API key configuration."
             else:
