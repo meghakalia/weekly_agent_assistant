@@ -335,6 +335,8 @@ def generate_shopping_list():
         data = request.get_json() or {}
         current_inventory = data.get('inventory', {})
         
+        logger.info(f"Received inventory data: {current_inventory}")
+        
         # Load default grocery list
         default_list_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'default_grocery_list.json')
         
@@ -342,21 +344,67 @@ def generate_shopping_list():
             with open(default_list_path, 'r') as f:
                 default_list = json.load(f)
         else:
-            default_list = {"items": []}
+            logger.error(f"Default grocery list not found at {default_list_path}")
+            default_list = {"categories": {}}
         
-        # Simple logic: compare default list with current inventory
-        shopping_list = []
-        inventory_items = set(item.get('name', '').lower() for item in current_inventory.get('items', []))
+        # Extract inventory items (lowercase for comparison)
+        inventory_items_lower = set()
+        current_inv_items = []
         
-        for item in default_list.get('items', []):
-            item_name = item.get('name', '')
-            if item_name.lower() not in inventory_items:
-                shopping_list.append(item)
+        for item in current_inventory.get('items', []):
+            item_name = item.get('name', '').lower()
+            inventory_items_lower.add(item_name)
+            
+            # Prepare current inventory for response
+            current_inv_items.append({
+                "name": item.get('name', ''),
+                "quantity": item.get('quantity', ''),
+                "max": "",  # You can add max calculation if needed
+                "percentage": 100  # Assume 100% if we have it
+            })
         
+        logger.info(f"Current inventory items: {list(inventory_items_lower)}")
+        
+        # Generate shopping list from default categories
+        shopping_list_items = []
+        
+        # Handle both old format (items array) and new format (categories object)
+        if 'categories' in default_list:
+            # New nested format
+            for category, items in default_list.get('categories', {}).items():
+                for item_key, item_data in items.items():
+                    # Convert item_key from snake_case to readable format
+                    item_name = item_key.replace('_', ' ').title()
+                    
+                    # Check if item is NOT in current inventory
+                    if item_name.lower() not in inventory_items_lower:
+                        max_qty = item_data.get('max_per_week', 1)
+                        unit = item_data.get('unit', 'unit')
+                        
+                        shopping_list_items.append({
+                            "name": item_name,
+                            "quantity": f"{max_qty} {unit}"
+                        })
+        elif 'items' in default_list:
+            # Old flat format
+            for item in default_list.get('items', []):
+                item_name = item.get('name', '')
+                if item_name.lower() not in inventory_items_lower:
+                    shopping_list_items.append(item)
+        
+        logger.info(f"Generated {len(shopping_list_items)} shopping list items")
+        
+        # Format response to match frontend expectations
         response = {
-            "date": datetime.now().strftime("%Y-%m-%d"),
-            "items": shopping_list,
-            "total_items": len(shopping_list)
+            "shopping_list": {
+                "items": shopping_list_items,
+                "total": len(shopping_list_items)
+            },
+            "current_inventory": {
+                "items": current_inv_items,
+                "total": len(current_inv_items)
+            },
+            "date": datetime.now().strftime("%Y-%m-%d")
         }
         
         return jsonify(response)
